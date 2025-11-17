@@ -3,7 +3,7 @@
 import React from "react";
 
 /**COMPONENT */
-const LoginForm: React.FC = () => {
+const LoginForm = () => {
   /**VARIABLES */
 
   /**FUNCTIONS */
