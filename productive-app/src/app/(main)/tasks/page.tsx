@@ -1,7 +1,9 @@
 "use client";
 
-import { taskApi } from "@/lib/services/api";
 import React from "react";
+import NewTask from "@/components/task/NewTask";
+import { taskApi } from "@/lib/services/api";
+import TaskCard from "@/components/task/TaskCard";
 
 /**COMPONENT */
 const Tasks: React.FC = () => {
@@ -16,16 +18,9 @@ const Tasks: React.FC = () => {
 
   /**TEMPLATE */
   return (
-    <div className="bg-[#808080] flex  h-screen p-4 justify-center items-center">
-      <div className="flex flex-col bg-amber-100 p-4 rounded-2xl align">
-        <h2 className="text-lg text-black">These are my tasks</h2>
-        <button
-          onClick={getTasks}
-          className="bg-green-500 text-black rounded-[5px] hover:cursor-pointer  hover:bg-green-400"
-        >
-          Get tasks
-        </button>
-      </div>
+    <div className="">
+      <NewTask />;
+      {/* <TaskCard /> */}
     </div>
   );
 };
