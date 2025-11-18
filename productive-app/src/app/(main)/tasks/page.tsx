@@ -10,12 +10,7 @@ const Tasks: React.FC = () => {
   /**VARIABLES */
 
   /**FUNCTIONS */
-  const getTasks = async () => {
-    const response = await taskApi.get("tasks");
-    console.log(response);
-    console.log(response.data);
-  };
-
+  
   /**TEMPLATE */
   return (
     <div className="">
