@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import NewTask from "@/components/task/NewTask";
 import { taskApi } from "@/lib/services/api";
