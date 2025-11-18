@@ -16,7 +16,7 @@ const Tasks: React.FC = () => {
 
   /**TEMPLATE */
   return (
-    <div class="bg-[#808080] flex  h-screen p-4 justify-center items-center">
+    <div className="bg-[#808080] flex  h-screen p-4 justify-center items-center">
       <div className="flex flex-col bg-amber-100 p-4 rounded-2xl align">
         <h2 className="text-lg text-black">These are my tasks</h2>
         <button
