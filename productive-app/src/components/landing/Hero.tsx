@@ -21,7 +21,7 @@ const Hero = () => {
                 href="/signup"
                 className="inline-flex h-12 items-center justify-center rounded-md bg-emerald-500 px-8 text-sm font-medium text-white shadow transition-colors hover:bg-emerald-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-700"
               >
-                Get Started Free
+                Get Started for Free
               </Link>
             </div>
           </div>
