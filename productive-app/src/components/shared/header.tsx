@@ -2,19 +2,18 @@ import Link from 'next/link';
 
 const Header = () => {
   return (
-    <header className="px-4 lg:px-6 h-16 flex items-center bg-white border-b border-gray-100">
-      <Link className="flex items-center justify-center font-bold text-xl" href="/">
-        Productive app
-      </Link>
-      <nav className="ml-auto flex gap-4 sm:gap-6">
-        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/login">
-          Log In
-        </Link>
-        <Link className="text-sm font-medium hover:underline underline-offset-4 text-emerald-500" href="/signup">
-          Sign Up
-        </Link>
-      </nav>
-    </header>
-  )
-}
+    <div className="flex flex-row justify-between">
+      <div>Logo</div>
+      <div className="flex flex-row">
+        <div className="me-2">Login</div>
+        <div>Signup</div>
+      </div>
+      {/* <div className="flex flex-row gap-2">
+        <div className="">Search</div>
+        <div className="">Profile</div>
+      </div> */}
+    </div>
+  );
+};
+
 export default Header;
