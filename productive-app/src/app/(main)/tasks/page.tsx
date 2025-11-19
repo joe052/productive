@@ -1,8 +1,7 @@
 import React from "react";
 import NewTask from "@/components/task/NewTask";
 import { taskApi } from "@/lib/services/api";
-import TaskCard from "@/components/task/TaskCard";
-import TaskLander from "@/components/task/TaskLander";
+import TaskList from "@/components/task/TaskList";
 
 /**COMPONENT */
 const Tasks: React.FC = () => {
@@ -13,9 +12,8 @@ const Tasks: React.FC = () => {
   /**TEMPLATE */
   return (
     <div className="">
-      <TaskLander/>;
+      <TaskList/>
       {/* <TaskCard /> */}
-      {/* <TaskLander /> */}
     </div>
   );
 };
