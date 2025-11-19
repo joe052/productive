@@ -1,36 +1,16 @@
 "use client";
-import React from 'react';
+import React from "react";
 
 const NewTaskButton = () => {
-  const buttonStyle = {
-    backgroundColor: '#2AB77C',
-    color: '#FFFFFF',          
-    padding: '8px 15px',
-    border: 'none',
-    cursor: 'pointer',
-    
-    fontFamily: 'Arial, sans-serif',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    
-    borderRadius: '6px', 
-    
-    boxShadow: '0 0 5px rgba(158, 161, 163, 0.32), 0 0 10px rgba(158, 164, 167, 0.4)',    
-    textShadow: '0 1px 0 rgba(0, 0, 0, 0.4), 0 0 3px rgba(255, 255, 255, 0.5)',
-    
-    outline: '1px solid rgba(255, 255, 255, 0.3)',
-    outlineOffset: '-1px',
-    
-    display: 'inline-block',
-    textAlign: 'center',
-    transition: 'background-color 0.3s, box-shadow 0.3s', 
-  };
-
-
   return (
-    <button 
-      style={buttonStyle}
-      onClick={() => alert('New Task Button Clicked!')}
+    <button
+      onClick={() => alert("New Task Button Clicked!")}
+      className="
+        bg-[#2AB77C] text-white font-bold text-sm px-4 py-2 rounded-md
+        shadow-md 
+        hover:bg-[#24a46f] hover:shadow-lg 
+        transition-all duration-300
+      "
     >
       + New Task
     </button>
