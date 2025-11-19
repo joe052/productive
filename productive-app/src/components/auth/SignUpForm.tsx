@@ -31,7 +31,7 @@ const SignUpForm: React.FC = () => {
 
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white shadow-lg lg:shadow-none">
         <div className="max-w-md w-full p-6">
-          <h1 className="text-7xl font-bold mb-8"><span className="text-black">Sign </span> <span className="text-green-500">up</span>
+          <h1 className="text-4xl font-bold mb-8"><span className="text-black">Sign </span> <span className="text-green-500">up</span>
           </h1>
           <form className="space-y-6">
             <label htmlFor="" className="block text-xm font-medium text-gray-700">First Name</label>
