@@ -13,7 +13,7 @@ const NewTask: React.FC = () => {
   return (
     <footer className="w-full py-12 bg-[#1c1c1a] text-white">
       <div className="container px-4 md:px-6 mx-auto">
-        <div className="grid border-2 justify-between grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid justify-between grid-cols-1 md:grid-cols-2 gap-8">
           
           {/* Brand Section */}
           <div className="space-y-4">
