@@ -49,14 +49,14 @@ const Features = () => {
             Everything You Need to Stay Productive
           </h2>
           <p className="max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            Powerful features designed to help you work smarter, not harder.
+            Powerful features designed to help you work better and smarter, not harder.
           </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuresData.map((feature, index) => (
-            <div key={index} className="flex flex-col space-y-2 p-6">
-              <div className={`p-3 rounded-lg w-fit ${feature.color} mb-4`}>
+            <div key={index} className="flex flex-col text-left space-y-2 p-6">
+              <div className={`p-3 text-center rounded-lg w-fit ${feature.color} mb-4`}>
                 {feature.icon}
               </div>
               <h3 className="text-xl font-bold text-gray-900">{feature.title}</h3>

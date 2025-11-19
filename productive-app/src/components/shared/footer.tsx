@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="text-xl font-bold text-white">Productive</h4>
             <p className="text-gray-400 max-w-md text-sm leading-relaxed">
-              The smart way to manage your tasks and boost your productivity. Join thousands of professionals who trust Productive to organize their work.
+              The smart way to manage your tasks and boost your productivity. Join thousands of  students and professionals who trust Productive to organize their work
             </p>
           </div>
 
