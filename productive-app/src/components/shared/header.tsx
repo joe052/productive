@@ -1,9 +1,6 @@
+import Link from 'next/link';
+
 const Header = () => {
-  /**VARIABLES */
-
-  /**FUNCTIONS */
-
-  /**COMPONENT */
   return (
     <div className="flex flex-row justify-between">
       <div>Logo</div>
