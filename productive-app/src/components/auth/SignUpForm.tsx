@@ -78,7 +78,7 @@ const SignUpForm: React.FC = () => {
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-900 bg-white
                   ${formik.touched.firstName && formik.errors.firstName 
                     ? "border-red-500 focus:ring-red-500" 
-                    : "border-gray-300 focus:ring-blue-500"}`}
+                    : "border-gray-300 focus:ring-green-500"}`}
                 placeholder="First Name"
               />
               {formik.touched.firstName && formik.errors.firstName ? (
@@ -98,7 +98,7 @@ const SignUpForm: React.FC = () => {
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-900 bg-white
                   ${formik.touched.lastName && formik.errors.lastName 
                     ? "border-red-500 focus:ring-red-500" 
-                    : "border-gray-300 focus:ring-blue-500"}`}
+                    : "border-gray-300 focus:ring-green-500"}`}
                 placeholder="Last Name"
               />
               {formik.touched.lastName && formik.errors.lastName ? (
@@ -118,7 +118,7 @@ const SignUpForm: React.FC = () => {
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-900 bg-white
                   ${formik.touched.email && formik.errors.email 
                     ? "border-red-500 focus:ring-red-500" 
-                    : "border-gray-300 focus:ring-blue-500"}`}
+                    : "border-gray-300 focus:ring-green-500"}`}
                 placeholder="Email"
               />
               {formik.touched.email && formik.errors.email ? (
@@ -138,7 +138,7 @@ const SignUpForm: React.FC = () => {
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-900 bg-white
                   ${formik.touched.password && formik.errors.password 
                     ? "border-red-500 focus:ring-red-500" 
-                    : "border-gray-300 focus:ring-blue-500"}`}
+                    : "border-gray-300 focus:ring-green-500"}`}
                 placeholder="Password"
               />
               {formik.touched.password && formik.errors.password ? (
@@ -147,9 +147,10 @@ const SignUpForm: React.FC = () => {
             </div>
             
             <div className="flex justify-center">
-              <button 
-                type="submit" 
-                className="py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150"
+              <button
+                type="submit"
+                disabled={!formik.isValid}
+                className="w-full py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 disabled:bg-green-300 disabled:cursor-not-allowed disabled:blur-sm"
               >
                 Create Account
               </button>
