@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import NewTaskButton from "../ui/AddTaskButton";
 import TaskCard from "./TaskCard";
 import { Task } from "@/lib/interfaces";
+import TaskLander from "./TaskLander";
 
 /** DUMMY TASKS */
 const DUMMY_TASKS: Task[] = [
@@ -82,11 +83,25 @@ const TaskList: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* TASK LIST HERE */}
-      <div className="p-4 space-y-4">
-        {tasks.length === 0 ? (
-          <p>No active tasks 🎉</p>
+
+      {/* CONDITIONAL RENDERING BLOCK */}
+      <div className="p-4 space-y-4 max-w-[800px] mx-auto">
+        {/* 1. LOADING STATE (Spinner) */}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-4"></div>
+            <p className="text-gray-500 text-sm animate-pulse">
+              Fetching tasks...
+            </p>
+          </div>
+        ) : tasks.length === 0 /* 2. EMPTY STATE */ ? (
+          // <div className="flex flex-col items-center justify-center py-12 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg">
+          <div>
+            {/* <TaskLander /> */}
+            Hauna Tasks!!
+          </div>
         ) : (
+          /**TASK LIST HERE */
           tasks.map((task) => (
             <TaskCard
               key={task.id}
