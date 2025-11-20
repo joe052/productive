@@ -14,8 +14,8 @@ const Tasks: React.FC = () => {
   return (
     <div className="">
       {/* <TaskLander/> */}
-      {/* <NewTask/> */}
-      <TaskList />
+      <NewTask/>
+      {/* <TaskList /> */}
     </div>
   );
 };

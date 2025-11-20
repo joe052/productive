@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Toaster, toast } from "sonner";
 
 /**COMPONENT */
 const NewTask: React.FC = () => {
@@ -9,7 +10,8 @@ const NewTask: React.FC = () => {
   /**FUNCTIONS */
 
   /**TEMPLATE */
-  return <div className="w-full flex justify-center mt-50">
+  return (
+    <div className="w-full flex justify-center mt-50">
       <div className="w-full max-w-xl rounded-xl border border-gray-200 shadow-sm p-8 bg-rgb(252, 252, 252)">
         <h2 className="text-lg font-semibold mb-6">Create New Task</h2>
 
@@ -90,6 +92,12 @@ const NewTask: React.FC = () => {
             </button>
 
             <button
+              onClick={() =>
+                toast("Task created successfully!", {
+                  className:
+                    "bg-sky-300 text-white rounded-xl shadow-md px-4 py-2",
+                })
+              }
               type="button"
               className="px-5 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
             >
@@ -99,6 +107,7 @@ const NewTask: React.FC = () => {
         </div>
       </div>
     </div>
+  );
 };
 
 export default NewTask;
