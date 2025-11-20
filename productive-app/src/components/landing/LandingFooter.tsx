@@ -1,22 +1,30 @@
-import React from 'react';
+"use client";
+
+import React from "react";
 import Link from 'next/link';
 
-const Footer = () => {
+/**COMPONENT */
+const NewTask: React.FC = () => {
+  /**VARIABLES */
+
+  /**FUNCTIONS */
+
+  /**TEMPLATE */
   return (
     <footer className="w-full py-12 bg-[#1c1c1a] text-white">
       <div className="container px-4 md:px-6 mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid justify-between grid-cols-1 md:grid-cols-2 gap-8">
           
           {/* Brand Section */}
           <div className="space-y-4">
             <h4 className="text-xl font-bold text-white">Productive</h4>
             <p className="text-gray-400 max-w-md text-sm leading-relaxed">
-              The smart way to manage your tasks and boost your productivity. Join thousands of  students and professionals who trust Productive to organize their work
+              The smart way to manage your tasks and boost your productivity. Join thousands of professionals who trust Productive to organize their work.
             </p>
           </div>
 
           {/* Links Section */}
-          <div className="md:flex md:justify-end">
+          <div className="">
             <div className="space-y-4">
               <h5 className="font-semibold text-emerald-500">Company</h5>
               <nav className="flex flex-col space-y-3 text-sm text-gray-400">
@@ -33,4 +41,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default NewTask;

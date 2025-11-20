@@ -1,7 +1,7 @@
 import React from "react";
-import HomeHero from "@/components/home/HomeHero";
-import HomeSection from "@/components/home/HomeSection";
-import HomeFooter from "@/components/home/HomeFooter";
+import LandingHero from "@/components/landing/LandingHero";
+import LandingFeatures from "@/components/landing/LandingFeatures";
+import LandingFooter from "@/components/landing/LandingFooter";
 
 /**COMPONENT */
 const LoginForm: React.FC = () => {
@@ -12,9 +12,9 @@ const LoginForm: React.FC = () => {
   /**TEMPLATE */
   return (
     <div className="">
-      <HomeHero />
-      {/* <HomeSection /> */}
-      {/* <HomeFooter /> */}
+      <LandingHero />
+      <LandingFeatures/>
+      <LandingFooter />
     </div>
   );
 };
