@@ -33,10 +33,57 @@ const DUMMY_TASKS: Task[] = [
     date: "2025-11-23",
     priority: "Low",
   },
+  {
+    id: 4,
+    title: "Go Shopping",
+    description: "Shop at Clean Shelf.",
+    date: "2025-11-20",
+    priority: "High",
+  },
+  {
+    id: 5,
+    title: "Make a Study Timetable",
+    description: "",
+    date: "2025-11-22",
+    priority: "Medium",
+  },
+  {
+    id: 6,
+    title: "Read New Blog Post",
+    description: "React state management article.",
+    date: "2025-11-23",
+    priority: "Low",
+  },
+  {
+    id: 7,
+    title: "Go Shopping",
+    description: "Shop at Clean Shelf.",
+    date: "2025-11-20",
+    priority: "High",
+  },
+  {
+    id: 8,
+    title: "Make a Study Timetable",
+    description: "",
+    date: "2025-11-22",
+    priority: "Medium",
+  },
+  {
+    id: 9,
+    title: "Read New Blog Post",
+    description: "React state management article.",
+    date: "2025-11-23",
+    priority: "Low",
+  },
 ];
 
+/** TASKLIST PROPS */
+interface TaskListProps {
+  setOpen: (value: boolean) => void; // receive setOpen from parent
+}
+
 /**COMPONENT */
-const TaskList: React.FC = () => {
+const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
   /**VARIABLES */
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -94,7 +141,7 @@ const TaskList: React.FC = () => {
           <div>
             {!isLoading && tasks.length > 0 && (
               <div className="task-actions">
-                <NewTaskButton />
+                <NewTaskButton onClick={() => setOpen(true)} />
               </div>
             )}
           </div>

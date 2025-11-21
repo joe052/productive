@@ -1,13 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 /**COMPONENT */
 const LogInForm: React.FC = () => {
   /**VARIABLES */
+  /**Login variables */
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  /**Styling */
   const imageContainerStyle = {
     borderTopRightRadius: "60px",
     borderBottomRightRadius: "60px",
@@ -22,6 +29,40 @@ const LogInForm: React.FC = () => {
   });
 
   /**FUNCTIONS */
+  /**Function to handle login */
+  const handleLogin = async ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) => {
+    /**Import supabase client */
+    const supabase = createClient();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      /**Throw error if exists */
+      if (error) throw error;
+
+      /**Return data if session exists */
+      if (data.session) {
+        /**navigate to app */
+        router.push("/tasks");
+        return data;
+      }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /**TEMPLATE */
   return (
@@ -51,8 +92,14 @@ const LogInForm: React.FC = () => {
             initialValues={{ email: "", password: "" }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
-              console.log("FORM SUBMITTED!!!");
-              console.log(values);
+              console.log("Login submitted with:", values);
+              /**Sign in with api */
+              const data = await handleLogin(values);
+              setSubmitting(false);
+              /**Reset form after submit */
+              if (data) {
+                resetForm();
+              }
             }}
           >
             {({
@@ -143,6 +190,9 @@ const LogInForm: React.FC = () => {
               </form>
             )}
           </Formik>
+
+          {/* ERROR BLOCK */}
+          {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
 
           {/* <form className="space-y-6">
             <label
