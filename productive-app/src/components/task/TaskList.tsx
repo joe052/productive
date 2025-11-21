@@ -7,6 +7,9 @@ import TaskCard from "./TaskCard";
 import TaskLander from "./TaskLander";
 import { Task } from "@/lib/interfaces";
 
+// Define the stagger constant
+const STAGGER_MS = 50;
+
 /** DUMMY TASKS */
 const DUMMY_TASKS: Task[] = [
   {
@@ -30,51 +33,7 @@ const DUMMY_TASKS: Task[] = [
     date: "2025-11-23",
     priority: "Low",
   },
-  {
-    id: 4,
-    title: "Go Shopping",
-    description: "Shop at Clean Shelf.",
-    date: "2025-11-20",
-    priority: "High",
-  },
-  {
-    id: 5,
-    title: "Make a Study Timetable",
-    description: "",
-    date: "2025-11-22",
-    priority: "Medium",
-  },
-  {
-    id: 6,
-    title: "Read New Blog Post",
-    description: "React state management article.",
-    date: "2025-11-23",
-    priority: "Low",
-  },
-  {
-    id: 7,
-    title: "Go Shopping",
-    description: "Shop at Clean Shelf.",
-    date: "2025-11-20",
-    priority: "High",
-  },
-  {
-    id: 8,
-    title: "Make a Study Timetable",
-    description: "",
-    date: "2025-11-22",
-    priority: "Medium",
-  },
-  {
-    id: 9,
-    title: "Read New Blog Post",
-    description: "React state management article.",
-    date: "2025-11-23",
-    priority: "Low",
-  },
 ];
-
-const STAGGER_MS = 80; // delay between items in ms
 
 /**COMPONENT */
 const TaskList: React.FC = () => {
@@ -111,6 +70,8 @@ const TaskList: React.FC = () => {
   const deleteTask = (id: number) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
+  // // empty state component
+  // const isEmptyState = !isLoading && tasks.length ===0;
 
   /**TEMPLATE */
   return (
@@ -145,7 +106,7 @@ const TaskList: React.FC = () => {
         {/* 1. LOADING STATE (Spinner) */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-4"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600 mb-4"></div>
             <p className="text-gray-500 text-sm animate-pulse">
               Fetching tasks...
             </p>
