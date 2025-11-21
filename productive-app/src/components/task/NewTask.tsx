@@ -5,9 +5,14 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { toast } from "sonner";
 
-/** COMPONENT */
-const NewTask: React.FC = () => {
-  /**VARIABLES */
+interface Props {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+}
+
+const NewTask: React.FC<Props> = ({ open, setOpen }) => {
+  if (!open) return null; // Don't render if modal is closed
+
   const TaskSchema = Yup.object().shape({
     title: Yup.string().required("Task title is required"),
     description: Yup.string(),
@@ -22,7 +27,6 @@ const NewTask: React.FC = () => {
     priority: "medium",
   };
 
-  /**FUNCTIONS*/
   const handleSubmit = (values: any, { resetForm }: any) => {
     console.log("Task Created:", values);
 
@@ -31,13 +35,14 @@ const NewTask: React.FC = () => {
     });
 
     resetForm();
+    setOpen(false); // Close modal after submission
   };
 
-  /**TEMPLATE */
   return (
-    <div className="w-full flex justify-center mt-50">
-      <div className="w-full max-w-xl rounded-xl border border-gray-200 shadow-sm p-8 bg-rgb(252, 252, 252)">
-        <h2 className="text-lg font-semibold mb-6">Create New Task</h2>
+    <div className="fixed inset-0 bg-black/40 flex justify-center items-center p-4 z-50">
+      <div className="w-full max-w-xl rounded-xl shadow-lg p-6 bg-white relative">
+        {/* Modal Header */}
+        <h2 className="text-xl font-semibold mb-4">Create New Task</h2>
 
         <Formik
           initialValues={initialValues}
@@ -46,57 +51,42 @@ const NewTask: React.FC = () => {
         >
           {({ handleReset }) => (
             <Form className="space-y-6">
-              {/**TASK TITLE */}
+              {/* Task Title */}
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Task Title *
-                </label>
+                <label className="block text-sm font-medium mb-1">Task Title *</label>
                 <Field
                   name="title"
                   type="text"
                   placeholder="e.g., Finish project report"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 
-                    focus:ring-2 focus:ring-green-500 focus:outline-none"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
                 />
-                <ErrorMessage
-                  name="title"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
-                />
+                <ErrorMessage name="title" component="p" className="text-red-500 text-sm mt-1" />
               </div>
 
-              {/* DESCRIPTION  */}
+              {/* Description */}
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Description
-                </label>
+                <label className="block text-sm font-medium mb-1">Description</label>
                 <Field
                   as="textarea"
                   name="description"
                   placeholder="Add any additional details..."
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 
-                    focus:ring-2 focus:ring-green-500 focus:outline-none"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
                 />
               </div>
 
-              {/**DUE DATE */}
+              {/* Due Date */}
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Due Date
-                </label>
-                <div className="flex gap-3">
-                  <input
-                    type="date"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
-                  />
-                </div>
+                <label className="block text-sm font-medium mb-1">Due Date</label>
+                <Field
+                  type="date"
+                  name="dueDate"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
+                />
               </div>
 
-              {/**PRIORITY */}
+              {/* Priority */}
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Priority
-                </label>
+                <label className="block text-sm font-medium mb-2">Priority</label>
                 <div className="flex items-center gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <Field type="radio" name="priority" value="low" />
@@ -113,18 +103,17 @@ const NewTask: React.FC = () => {
                     <span>High</span>
                   </label>
                 </div>
-                <ErrorMessage
-                  name="priority"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
-                />
+                <ErrorMessage name="priority" component="p" className="text-red-500 text-sm mt-1" />
               </div>
 
-              {/**BUTTONS */}
+              {/* Buttons */}
               <div className="flex justify-end gap-4 pt-4">
                 <button
                   type="button"
-                  onClick={handleReset}
+                  onClick={() => {
+                    handleReset();
+                    setOpen(false);
+                  }}
                   className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
                 >
                   Cancel
@@ -146,3 +135,4 @@ const NewTask: React.FC = () => {
 };
 
 export default NewTask;
+  

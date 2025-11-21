@@ -1,10 +1,16 @@
 "use client";
 import React from "react";
 
-const NewTaskButton = () => {
+
+interface Props {
+  onClick?: () => void;
+}
+
+
+const NewTaskButton: React.FC<Props> = ({ onClick }) => {
   return (
     <button
-      onClick={() => alert("New Task Button Clicked!")}
+      onClick={onClick}
       className="
         bg-[#2DC887] text-white font-bold text-sm px-4 py-2 rounded-md
         shadow-md 

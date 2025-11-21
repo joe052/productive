@@ -76,8 +76,13 @@ const DUMMY_TASKS: Task[] = [
 
 const STAGGER_MS = 80; // delay between items in ms
 
+/** TASKLIST PROPS */
+interface TaskListProps {
+  setOpen: (value: boolean) => void; // receive setOpen from parent
+}
+
 /**COMPONENT */
-const TaskList: React.FC = () => {
+const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
   /**VARIABLES */
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -133,7 +138,7 @@ const TaskList: React.FC = () => {
           <div>
             {!isLoading && tasks.length > 0 && (
               <div className="task-actions">
-                <NewTaskButton />
+                <NewTaskButton onClick={() => setOpen(true)} />
               </div>
             )}
           </div>
