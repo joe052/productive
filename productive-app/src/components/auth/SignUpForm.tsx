@@ -1,168 +1,296 @@
 "use client";
 
-import Link from "next/link";
-import React from "react";
-import { useFormik } from "formik";
+import React, { useState } from "react";
+import { Formik } from "formik";
 import * as Yup from "yup";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 /**COMPONENT */
 const SignUpForm: React.FC = () => {
   /**VARIABLES */
-  const imageContainerStyle = {
-    borderTopRightRadius: '60px',
-    borderBottomRightRadius: '60px',
-    overflow: 'hidden'
-  };
-  /**FUNCTIONS */
+  /**Signup variables */
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const SignupSchema = Yup.object({
+  /**Styling */
+  const imageContainerStyle = {
+    borderTopRightRadius: "60px",
+    borderBottomRightRadius: "60px",
+    overflow: "hidden",
+  };
+
+  /**Yup validation schema for the signup form */
+  const validationSchema = Yup.object().shape({
     firstName: Yup.string()
       .max(15, "Must be 15 characters or less")
       .required("First Name is required"),
     lastName: Yup.string()
       .max(15, "Must be 15 characters or less")
       .required("Last Name is required"),
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string()
-      .min(12, "Password must be at least 12 characters")
-      .required("Password is required"),
+      .required("Password is required")
+      .min(6, "Password must be at least 6 characters"), // Matching Login logic (min 6)
   });
 
-  const formik = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-    },
-    validationSchema: SignupSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-      console.log("Form Data:", values);
-    },
-  });
+  /**FUNCTIONS */
+  /**Function to handle signup */
+  const handleSignup = async (values: any) => {
+    /**Import supabase client */
+    const supabase = createClient();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: values.email,
+        password: values.password,
+        options: {
+          // This saves the first/last name to the user's metadata in Supabase
+          data: {
+            first_name: values.firstName,
+            last_name: values.lastName,
+          },
+        },
+      });
+
+      /**Throw error if exists */
+      if (error) throw error;
+
+      /**
+       * Return data if session exists
+       * Note: If Email Confirmations are enabled in Supabase,
+       * data.session might be null until they click the link.
+       */
+      if (data.session) {
+        /**navigate to app */
+        router.push("/tasks");
+        return data;
+      } else if (data.user && !data.session) {
+        // Optional: Handle case where email verification is required
+        setError("Account created! Please check your email to verify.");
+      }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /**TEMPLATE */
   return (
     <div className="flex min-h-screen bg-white">
       <div
         className="hidden lg:block lg:w-1/2 relative"
-        style={imageContainerStyle}>
+        style={imageContainerStyle}
+      >
         <div
           className="h-full bg-cover bg-center shadow-2xl"
           style={{
-            backgroundImage: "url('/images/auth.png')"
+            backgroundImage: "url('/images/auth.png')",
           }}
-          aria-hidden="true">
-        </div>
+          aria-hidden="true"
+        ></div>
       </div>
 
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white shadow-lg lg:shadow-none">
         <div className="max-w-md w-full p-6">
           <h1 className="text-4xl font-bold mb-8">
-            <span className="text-black">Sign </span> <span className="text-green-500">up</span>
+            <span className="text-black">Sign </span>{" "}
+            <span className="text-green-500">Up</span>
           </h1>
-          
-          <form onSubmit={formik.handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
-              <input
-                id="firstName"
-                name="firstName"
-                type="text"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.firstName}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-900 bg-white
-                  ${formik.touched.firstName && formik.errors.firstName 
-                    ? "border-red-500 focus:ring-red-500" 
-                    : "border-gray-300 focus:ring-green-500"}`}
-                placeholder="First Name"
-              />
-              {formik.touched.firstName && formik.errors.firstName ? (
-                <div className="text-red-500 text-xs mt-1">{formik.errors.firstName}</div>
-              ) : null}
-            </div>
 
-            <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
-              <input
-                id="lastName"
-                name="lastName"
-                type="text"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.lastName}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-900 bg-white
-                  ${formik.touched.lastName && formik.errors.lastName 
-                    ? "border-red-500 focus:ring-red-500" 
-                    : "border-gray-300 focus:ring-green-500"}`}
-                placeholder="Last Name"
-              />
-              {formik.touched.lastName && formik.errors.lastName ? (
-                <div className="text-red-500 text-xs mt-1">{formik.errors.lastName}</div>
-              ) : null}
-            </div>
+          {/* SIGNUP FORM with Formik */}
+          <Formik
+            initialValues={{
+              firstName: "",
+              lastName: "",
+              email: "",
+              password: "",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={async (values, { setSubmitting, resetForm }) => {
+              console.log("Signup submitted with:", values);
+              /**Sign up with api */
+              const data = await handleSignup(values);
+              setSubmitting(false);
+              /**Reset form after submit if successful session created */
+              if (data) {
+                resetForm();
+              }
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              isValid,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+            }) => (
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                {/* FIRST NAME */}
+                <div className="">
+                  <label
+                    htmlFor="firstName"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    First Name
+                  </label>
+                  <div
+                    className={`rounded-md border ${
+                      errors.firstName && touched.firstName
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    <input
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      value={values.firstName}
+                      onChange={handleChange("firstName")}
+                      onBlur={handleBlur("firstName")}
+                      className="w-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:rounded-md placeholder-gray-400"
+                      placeholder="First Name"
+                    />
+                  </div>
+                  {errors.firstName && touched.firstName && (
+                    <p className="mt-1 text-xs text-red-500">
+                      {errors.firstName}
+                    </p>
+                  )}
+                </div>
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.email}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-900 bg-white
-                  ${formik.touched.email && formik.errors.email 
-                    ? "border-red-500 focus:ring-red-500" 
-                    : "border-gray-300 focus:ring-green-500"}`}
-                placeholder="Email"
-              />
-              {formik.touched.email && formik.errors.email ? (
-                <div className="text-red-500 text-xs mt-1">{formik.errors.email}</div>
-              ) : null}
-            </div>
+                {/* LAST NAME */}
+                <div className="">
+                  <label
+                    htmlFor="lastName"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Last Name
+                  </label>
+                  <div
+                    className={`rounded-md border ${
+                      errors.lastName && touched.lastName
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    <input
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      value={values.lastName}
+                      onChange={handleChange("lastName")}
+                      onBlur={handleBlur("lastName")}
+                      className="w-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:rounded-md placeholder-gray-400"
+                      placeholder="Last Name"
+                    />
+                  </div>
+                  {errors.lastName && touched.lastName && (
+                    <p className="mt-1 text-xs text-red-500">
+                      {errors.lastName}
+                    </p>
+                  )}
+                </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 placeholder-gray-400 text-gray-900 bg-white
-                  ${formik.touched.password && formik.errors.password 
-                    ? "border-red-500 focus:ring-red-500" 
-                    : "border-gray-300 focus:ring-green-500"}`}
-                placeholder="Password"
-              />
-              {formik.touched.password && formik.errors.password ? (
-                <div className="text-red-500 text-xs mt-1">{formik.errors.password}</div>
-              ) : null}
-            </div>
-            
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                disabled={!formik.isValid}
-                className="w-full py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 disabled:bg-green-300 disabled:cursor-not-allowed disabled:blur-sm"
-              >
-                Create Account
-              </button>
-            </div>
+                {/* EMAIL */}
+                <div className="">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email
+                  </label>
+                  <div
+                    className={`rounded-md border ${
+                      errors.email && touched.email
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={values.email}
+                      onChange={handleChange("email")}
+                      onBlur={handleBlur("email")}
+                      className="w-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:rounded-md placeholder-gray-400"
+                      placeholder="Email"
+                    />
+                  </div>
+                  {errors.email && touched.email && (
+                    <p className="mt-1 text-xs text-red-500">{errors.email}</p>
+                  )}
+                </div>
 
-            <p className="mt-6 text-center text-sm text-gray-600">
-              Already have an account?{' '}
-              <Link href="/login" className="font-medium text-green-500 hover:text-green-600 transition duration-150">
-                Sign in
-              </Link>
-            </p>
-          </form>
+                {/* PASSWORD */}
+                <div className="">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Password
+                  </label>
+                  <div
+                    className={`rounded-md border ${
+                      errors.password && touched.password
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      value={values.password}
+                      onChange={handleChange("password")}
+                      onBlur={handleBlur("password")}
+                      className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+                      placeholder="Password"
+                    />
+                  </div>
+                  {errors.password && touched.password && (
+                    <p className="mt-1 text-xs text-red-500">
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
+
+                {/* SUBMIT BUTTON */}
+                <div className="flex justify-center pt-2">
+                  <button
+                    type="submit"
+                    disabled={!isValid || loading}
+                    className={`w-full py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 disabled:bg-green-300 disabled:cursor-not-allowed disabled:blur-sm`}
+                  >
+                    {loading ? "Creating Account..." : "Create Account"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </Formik>
+
+          {/* ERROR BLOCK */}
+          {error && (
+            <p className="mt-4 text-center text-sm text-red-500">{error}</p>
+          )}
+
+          <p className="mt-6 text-center text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="font-medium text-green-500 hover:text-green-600 transition duration-150"
+            >
+              Sign in
+            </Link>
+          </p>
         </div>
       </div>
     </div>

@@ -134,7 +134,7 @@ const LogInForm: React.FC = () => {
                       value={values.email}
                       onChange={handleChange("email")}
                       onBlur={handleBlur("email")}
-                      className="w-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:rounded-md placeholder-gray-400"
+                      className="w-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:rounded-md placeholder-gray-400"
                       placeholder="Email"
                     />
                   </div>
@@ -166,7 +166,7 @@ const LogInForm: React.FC = () => {
                       value={values.password}
                       onChange={handleChange("password")}
                       onBlur={handleBlur("password")}
-                      className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+                      className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
                       placeholder="Password"
                     />
                   </div>
@@ -182,7 +182,7 @@ const LogInForm: React.FC = () => {
                   <button
                     type="submit"
                     disabled={!isValid}
-                    className={`py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-red-500 transition duration-150`}
+                    className={`w-full py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 disabled:bg-green-300 disabled:cursor-not-allowed disabled:blur-sm`}
                   >
                     Login
                   </button>
@@ -192,7 +192,7 @@ const LogInForm: React.FC = () => {
           </Formik>
 
           {/* ERROR BLOCK */}
-          {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+          {error && <p className="mt-4 text-center text-sm text-red-500">{error}</p>}
 
           {/* <form className="space-y-6">
             <label
