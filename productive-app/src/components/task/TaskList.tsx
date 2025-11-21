@@ -123,7 +123,7 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
   /**TEMPLATE */
   return (
     <div>
-      <div className="shadow-md rounded-lg p-4 md:p-5 mx-auto mt-5 mb-5 max-w-[800px] bg-white">
+<div className="shadow-md rounded-lg p-4 md:p-5 mx-auto mt-5 mb-5 max-w-[800px] bg-white sticky top-0 z-50">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className="text-lg font-bold text-gray-800 mr-2">
