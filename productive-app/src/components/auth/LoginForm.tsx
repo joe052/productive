@@ -22,6 +22,14 @@ const LogInForm: React.FC = () => {
   });
 
   /**FUNCTIONS */
+  const LoginSchema = Yup.object({
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(12, "Password must be at least 12 characters")
+      .required("Password is required"),
+  });  
 
   /**TEMPLATE */
   return (
