@@ -10,6 +10,7 @@ const NewTaskButton = () => {
         shadow-md 
         hover:bg-[#26A671] hover:shadow-lg 
         transition-all duration-300
+        cursor-pointer
       "
     >
       + New Task

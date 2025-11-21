@@ -1,26 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 import { Calendar, MoreVertical, Pencil } from "lucide-react";
 import { Task } from "@/lib/interfaces";
 
-/**INTERFACES & TYPES */
+/** INTERFACES & TYPES */
 interface TaskCardProps {
   task: Task;
   onUpdate: (id: number, updatedTask: Partial<Task>) => void;
   onDelete: (id: number) => void;
+  /** optional animation controls passed from TaskList */
+  reveal?: boolean;
+  animateDelay?: number; // ms
 }
 
-/**COMPONENT */
-const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate, onDelete }) => {
+/** COMPONENT */
+const TaskCard: React.FC<TaskCardProps> = ({
+  task,
+  onUpdate,
+  onDelete,
+  reveal = false,
+  animateDelay = 0,
+}) => {
   const { id, title, description, date, priority } = task;
 
   const priorityColorClass =
     priority === "High"
-      ? "bg-red-500 text-red-600"
+      ? "bg-orange-500 text-orange-600"
       : priority === "Medium"
-      ? "bg-yellow-500 text-yellow-600"
-      : "bg-green-500 text-green-600";
+      ? "bg-green-500 text-green-600"
+      : "bg-[#64748B] text-[#64748B]";
 
   /** STATE */
   const [isEditing, setIsEditing] = useState(false);
@@ -29,8 +39,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate, onDelete }) => {
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
   const [editPriority, setEditPriority] = useState(priority);
-
   const [editDate, setEditDate] = useState(date);
+
+  /** menu portal positioning */
+  const moreBtnRef = useRef<HTMLButtonElement | null>(null);
+  const [menuCoords, setMenuCoords] = useState<{ top: number; left: number } | null>(null);
 
   /** HANDLERS */
   const onEdit = () => {
@@ -66,131 +79,198 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate, onDelete }) => {
     closeMenu();
   };
 
+  /** sync local fields if parent updates task */
+  useEffect(() => {
+    setEditTitle(title);
+    setEditDescription(description);
+    setEditPriority(priority);
+    setEditDate(date);
+  }, [title, description, priority, date]);
+
+  /** compute menu position */
+  useEffect(() => {
+    if (showMenu && moreBtnRef.current && typeof document !== "undefined") {
+      const rect = moreBtnRef.current.getBoundingClientRect();
+      const top = rect.bottom + window.scrollY + 8;
+      const left = rect.right + window.scrollX - 160;
+      setMenuCoords({ top, left });
+    } else {
+      setMenuCoords(null);
+    }
+  }, [showMenu]);
+
+  /** portal target */
+  const portalTarget = typeof document !== "undefined" ? document.body : null;
+
+  /** animation style */
+  const animStyle: React.CSSProperties = {
+    transitionProperty: "opacity, margin-top",
+    transitionDuration: "240ms",
+    transitionTimingFunction: "cubic-bezier(.2,.9,.2,1)",
+    transitionDelay: `${animateDelay}ms`,
+    opacity: reveal ? 1 : 0,
+    marginTop: reveal ? 0 : 12,
+  };
+
   return (
-    <div className="w-full flex justify-center my-2 relative">
-      <div className="w-full max-w-[800px] bg-white border border-gray-200 shadow-sm rounded-2xl p-6 flex justify-between items-start hover:shadow-md transition-all min-h-[0px]">
-        {/* LEFT */}
-        <div className="flex flex-col flex-1">
-          <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-          <p className="text-gray-500 mt-1">{description}</p>
+    <>
+      {/* MAIN CARD */}
+      <div className="w-full flex justify-center my-2 relative">
+        <div
+          className="w-full max-w-[800px] bg-white border border-gray-200 shadow-sm rounded-2xl p-6 flex justify-between items-start hover:shadow-md transition-all min-h-[0px]"
+          aria-labelledby={`task-${id}-title`}
+        >
+          {/* LEFT */}
+          <div className="flex flex-col flex-1">
+            <div style={animStyle}>
+              <h3 id={`task-${id}-title`} className="text-lg font-semibold text-gray-900">
+                {title}
+              </h3>
+              <p className="text-gray-500 mt-1">{description}</p>
 
-          <div className="flex items-center gap-6 mt-4 text-sm text-gray-500 flex-wrap">
-            <span className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition">
-              <Calendar className="w-4 h-4 text-gray-400" />
-              {date}
-            </span>
+              <div className="flex items-center gap-6 mt-4 text-sm text-gray-500 flex-wrap">
+                <span
+                  onClick={onEdit}
+                  className="flex items-center gap-1 cursor-pointer hover:text-[#2DC887] transition"
+                >
+                  <Calendar className="w-4 h-4 text-gray-400" />
+                  {date}
+                </span>
 
-            <span className="flex items-center gap-1">
-              <div
-                className={`w-3 h-3 rounded-full ${priorityColorClass}`}
-              ></div>
-              {priority} Priority
-            </span>
-          </div>
-        </div>
-
-        {/* RIGHT */}
-        <div className="flex items-start gap-4 flex-shrink-0 mt-4 md:mt-0 relative">
-          <button onClick={onEdit}>
-            <Pencil className="w-5 h-5 text-green-500 hover:text-green-600 transition" />
-          </button>
-
-          <button onClick={onMenu}>
-            <MoreVertical className="w-5 h-5 text-gray-500 hover:text-gray-700 transition" />
-          </button>
-
-          {showMenu && (
-            <div className="absolute right-0 top-full mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-xl z-10">
-              <button
-                className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-t-lg"
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
-
-              <button
-                className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-b-lg"
-                onClick={handleMarkDone}
-              >
-                Mark as Done
-              </button>
+                <span
+                  onClick={onEdit}
+                  className="flex items-center gap-1 cursor-pointer hover:text-[#2DC887] transition"
+                >
+                  <div className={`w-3 h-3 rounded-full ${priorityColorClass}`}></div>
+                  {priority} Priority
+                </span>
+              </div>
             </div>
-          )}
+          </div>
+
+          {/* RIGHT */}
+          <div className="flex items-start gap-4 flex-shrink-0 mt-4 md:mt-0 relative">
+            <button onClick={onEdit}>
+              <Pencil className="w-5 h-5 text-[#2DC887] hover:text-[#26A671] transition cursor-pointer" />
+            </button>
+            <button ref={moreBtnRef} onClick={onMenu}>
+              <MoreVertical className="w-5 h-5 text-gray-500 hover:text-[#141204] transition cursor-pointer" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* EDIT MODAL */}
-      {isEditing && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 p-4">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-2xl">
-            <h3 className="text-xl font-bold mb-4">Edit Task (ID: {id})</h3>
-
-            {/* Title */}
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Title
-            </label>
-            <input
-              className="w-full p-2 border border-gray-300 rounded mb-4"
-              value={editTitle}
-              onChange={(e) => setEditTitle(e.target.value)}
-            />
-
-            {/* Description */}
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
-              className="w-full p-2 border border-gray-300 rounded mb-4"
-              value={editDescription}
-              onChange={(e) => setEditDescription(e.target.value)}
-            />
-
-            {/* DATE FIELD */}
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Scheduled Date
-            </label>
-            <input
-              type="date"
-              className="w-full p-2 border border-gray-300 rounded mb-4"
-              value={editDate}
-              onChange={(e) => setEditDate(e.target.value)}
-            />
-
-            {/* Priority */}
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Priority
-            </label>
-            <select
-              className="w-full p-2 border border-gray-300 rounded mb-6"
-              value={editPriority}
-              onChange={(e) =>
-                setEditPriority(e.target.value as "High" | "Medium" | "Low")
-              }
+      {/* MENU PORTAL */}
+      {showMenu && portalTarget && menuCoords
+        ? ReactDOM.createPortal(
+            <div
+              className="absolute z-50"
+              style={{
+                position: "absolute",
+                top: menuCoords.top,
+                left: menuCoords.left,
+                width: 160,
+              }}
+              onMouseLeave={closeMenu}
             >
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
-            </select>
+              <div className="bg-white border border-gray-200 rounded-lg shadow-xl">
+                <button
+                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-t-lg"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
 
-            {/* ACTIONS */}
-            <div className="flex justify-end gap-2">
-              <button
-                className="px-4 py-2 bg-gray-200 rounded"
-                onClick={closeEdit}
+                <button
+                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-b-lg"
+                  onClick={handleMarkDone}
+                >
+                  Mark as Done
+                </button>
+              </div>
+            </div>,
+            portalTarget
+          )
+        : null}
+
+      {/* EDIT MODAL */}
+      {isEditing && portalTarget
+        ? ReactDOM.createPortal(
+            <div
+              className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 p-4"
+              role="dialog"
+              aria-modal="true"
+              onClick={closeEdit}
+            >
+              <div
+                className="bg-white p-6 rounded-lg w-full max-w-md shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
               >
-                Cancel
-              </button>
-              <button
-                className="px-4 py-2 bg-green-500 text-white rounded"
-                onClick={handleSave}
-              >
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+                <h3 className="text-xl font-bold mb-4">Edit Task (ID: {id})</h3>
+
+                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <input
+                  className="w-full p-2 border border-gray-300 rounded mb-4"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                />
+
+                <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
+                <textarea
+                  className="w-full p-2 border border-gray-300 rounded mb-4"
+                  value={editDescription}
+                  onChange={(e) => setEditDescription(e.target.value)}
+                />
+
+                <label className="block text-sm font-bold text-gray-700 mb-1">Scheduled Date</label>
+                <input
+                  type="date"
+                  className="w-full p-2 border border-gray-300 rounded mb-4"
+                  value={editDate}
+                  onChange={(e) => setEditDate(e.target.value)}
+                />
+
+                <label className="block text-sm font-bold text-gray-700 mb-1">Priority</label>
+                <select
+                  className="w-full p-2 border border-gray-300 rounded mb-6"
+                  value={editPriority}
+                  onChange={(e) =>
+                    setEditPriority(e.target.value as "High" | "Medium" | "Low")
+                  }
+                >
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    className="bg-gray-400 text-white font-bold text-sm px-4 py-2 rounded-md
+                               shadow-md 
+                               hover:bg-[#64748B] hover:shadow-lg 
+                               transition-all duration-300
+                               cursor-pointer"
+                    onClick={closeEdit}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="bg-[#2DC887] text-white font-bold text-sm px-4 py-2 rounded-md
+                               shadow-md 
+                               hover:bg-[#26A671] hover:shadow-lg 
+                               transition-all duration-300
+                               cursor-pointer"
+                    onClick={handleSave}
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>,
+            portalTarget
+          )
+        : null}
+    </>
   );
 };
 
