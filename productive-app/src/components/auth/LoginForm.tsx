@@ -193,7 +193,7 @@ const LogInForm: React.FC = () => {
 
           {/* ERROR BLOCK */}
           {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
-          
+
           {/* <form className="space-y-6">
             <label
               htmlFor=""
