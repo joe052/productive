@@ -1,9 +1,18 @@
+// import express from "express";
+// import dotenv from "dotenv";
 const express = require("express");
-const { User } = require("../db/models/user.model");
+require("dotenv").config();
+const { createClient } = require("@supabase/supabase-js");
+const { User } = require("../db/models/user.model.js");
 const router = express.Router();
 
+// dotenv.config();
+
 /**Initialize Supabase with admin privileges */
-const supabase = createClient();
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 router.route("/signup").post(async (req, res) => {
   const { email, password, firstName, lastName } = req.body;

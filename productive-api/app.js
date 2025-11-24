@@ -23,15 +23,16 @@ app.use(cors(corsOptions));
 //   next();
 // });
 
-
 /**EVERYTHING IS HERE */
 app.get("/", (req, res) => {
   res.send("Your server is running");
 });
 
+/*AUTH ROUTES */
+app.use("/auth", require("./routes/auth.routes"));
+
 /*TASKS ROUTES */
 app.use("/tasks", require("./routes/tasks.routes"));
-
 
 const PORT = 4000;
 app.listen(PORT, () => {

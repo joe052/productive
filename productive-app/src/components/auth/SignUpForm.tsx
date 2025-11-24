@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { taskApi } from "@/lib/services/api";
+import { SignUpInt } from "@/lib/interfaces";
 
 /**COMPONENT */
 const SignUpForm: React.FC = () => {
@@ -38,40 +40,32 @@ const SignUpForm: React.FC = () => {
 
   /**FUNCTIONS */
   /**Function to handle signup */
-  const handleSignup = async (values: any) => {
-    /**Import supabase client */
-    const supabase = createClient();
+  const handleSignup = async ({
+    email,
+    password,
+    firstName,
+    lastName,
+  }: SignUpInt) => {
     setError(null);
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: values.email,
-        password: values.password,
-        options: {
-          // This saves the first/last name to the user's metadata in Supabase
-          data: {
-            first_name: values.firstName,
-            last_name: values.lastName,
-          },
-        },
+      /**Post user to API */
+      const response = await taskApi.post("/auth/signup", {
+        email,
+        password,
+        firstName,
+        lastName,
       });
-
+      console.log(response);
       /**Throw error if exists */
       if (error) throw error;
 
-      /**
-       * Return data if session exists
-       * Note: If Email Confirmations are enabled in Supabase,
-       * data.session might be null until they click the link.
-       */
-      if (data.session) {
-        /**navigate to app */
-        router.push("/tasks");
-        return data;
-      } else if (data.user && !data.session) {
-        // Optional: Handle case where email verification is required
-        setError("Account created! Please check your email to verify.");
+      if (response.data) {
+        console.log(response.data);
+        /**Alert success */
+        alert(response.data.message);
+        return response.data;
       }
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");

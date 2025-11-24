@@ -5,4 +5,10 @@ const taskApi = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+export default {
+  get: (uri: string) => {
+    return taskApi.get(uri);
+  },
+};
+
 export { taskApi };
