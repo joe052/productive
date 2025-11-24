@@ -20,7 +20,8 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
   /** VALIDATION SCHEMA */
   const TaskValidationSchema = Yup.object().shape({
     title: Yup.string().required("Task title is required"),
-    description: Yup.string().required("Task description is required"),
+    description: Yup.string().required("Task description is required")
+    .max(200,),
     date: Yup.date().required("Task date is required"),
     priority: Yup.string().required("Priority is required"),
   });
@@ -80,8 +81,8 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
                   className={`w-full border rounded-lg px-3 py-2 focus:outline-none
                 ${
                   touched.title && errors.title
-                    ? "border-red-500 focus:ring-2 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-2 focus:ring-green-500"
+                    ? "border-red-500 focus:ring-0 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-0 focus:ring-green-500"
                 }`}
                 />
                 <ErrorMessage
@@ -100,11 +101,11 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
                   as="textarea"
                   name="description"
                   placeholder="Add any additional details..."
-                  className={`w-full border rounded-lg px-3 py-2 focus:outline-none
+                  className={`w-full border rounded-lg px-3 py-2 focus:outline-none resize-none
                ${
                  touched.description && errors.description
-                   ? "border-red-500 focus:ring-2 focus:ring-red-500"
-                   : "border-gray-300 focus:ring-2 focus:ring-green-500"
+                   ? "border-red-500 focus:ring-0 focus:ring-red-500"
+                   : "border-gray-300 focus:ring-0 focus:ring-green-500"
                }`}
                 />
                 <ErrorMessage
@@ -125,8 +126,8 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
                   className={`w-full border rounded-lg px-3 py-2 focus:outline-none
                 ${
                   touched.date && errors.date
-                    ? "border-red-500 focus:ring-2 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-2 focus:ring-green-500"
+                    ? "border-red-500 focus:ring-0 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-0 focus:ring-green-500"
                 }`}
                 />
                 <ErrorMessage
@@ -181,7 +182,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
                 <button
                   type="submit"
                   disabled={!isValid}
-                  className="px-5 py-2 rounded-lg bg-green-500 text-white hover:bg-green-700"
+                  className="px-5 py-2 rounded-lg bg-green-500 text-black hover:bg-green-700"
                 >
                   {isSubmitting ? "Submitting..." : "Create Task"}
                 </button>
