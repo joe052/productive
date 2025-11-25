@@ -130,9 +130,13 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 id={`task-${_id}-title`}
                 className="text-lg font-semibold text-gray-900"
               >
-                {title}
+                {title?.trim().split(/\s+/).slice(0, 5).join(" ") +
+                  (title?.trim().split(/\s+/).length > 5 ? "..." : "")}
               </h3>
-              <p className="text-gray-500 mt-1">{description}</p>
+              <p className="text-gray-500 mt-1">
+                {description?.trim().split(/\s+/).slice(0, 5).join(" ") +
+                  (description?.trim().split(/\s+/).length > 5 ? "..." : "")}
+              </p>
 
               <div className="flex items-center gap-6 mt-4 text-sm text-gray-500 flex-wrap">
                 <span
