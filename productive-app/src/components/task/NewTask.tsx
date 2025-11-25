@@ -118,8 +118,11 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center p-4 z-50">
       <div className="w-full max-w-xl rounded-xl shadow-lg p-6 bg-white relative">
         {/* Modal Header */}
-        <h2 className="text-xl font-semibold mb-4">Create New Task</h2>
-
+        <h2 className="text-xl font-semibold mb-4">
+          <span className="text-black">Create </span>
+          <span className="text-green-500">New </span>
+          <span className="text-black">Task </span>
+        </h2>
         <Formik
           initialValues={initialValues}
           validationSchema={TaskValidationSchema}
@@ -149,8 +152,8 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
                   className={`w-full border rounded-lg px-3 py-2 focus:outline-none
                 ${
                   touched.title && errors.title
-                    ? "border-red-500 focus:ring-0 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-0 focus:ring-green-500"
+                    ? "border-red-500 focus:ring-1 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-1 focus:ring-green-500"
                 }`}
                 />
                 <ErrorMessage
@@ -172,8 +175,8 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
                   className={`w-full border rounded-lg px-3 py-2 focus:outline-none resize-none
                ${
                  touched.description && errors.description
-                   ? "border-red-500 focus:ring-0 focus:ring-red-500"
-                   : "border-gray-300 focus:ring-0 focus:ring-green-500"
+                   ? "border-red-500 focus:ring-1 focus:ring-red-500"
+                   : "border-gray-300 focus:ring-1 focus:ring-green-500"
                }`}
                 />
                 <ErrorMessage
@@ -194,8 +197,8 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
                   className={`w-full border rounded-lg px-3 py-2 focus:outline-none
                 ${
                   touched.scheduledAt && errors.scheduledAt
-                    ? "border-red-500 focus:ring-0 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-0 focus:ring-green-500"
+                    ? "border-red-500 focus:ring-1 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-1 focus:ring-green-500"
                 }`}
                 />
                 <ErrorMessage
@@ -241,7 +244,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
                     handleReset();
                     setOpen(false);
                   }}
-                  className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+                  className="px-4 py-2 rounded-lg border text-white font-bold bg-gray-400 hover:bg-gray-600"
                 >
                   Cancel
                 </button>
@@ -250,7 +253,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
                 <button
                   type="submit"
                   disabled={!isValid}
-                  className="px-5 py-2 rounded-lg bg-green-500 text-black hover:bg-green-700"
+                  className="px-5 py-2 rounded-lg bg-green-500 text-white hover:bg-green-700"
                 >
                   {isSubmitting ? "Submitting..." : "Create Task"}
                 </button>
