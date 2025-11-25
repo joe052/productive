@@ -1,8 +1,9 @@
 export interface Task {
-  id: number;
+  _id: string;
+  userId?: any;
   title: string;
   description: string;
-  date: string;
+  scheduledAt: string;
   priority: "High" | "Medium" | "Low";
 }
 

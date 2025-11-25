@@ -8,8 +8,8 @@ import { Task } from "@/lib/interfaces";
 /** INTERFACES & TYPES */
 interface TaskCardProps {
   task: Task;
-  onUpdate: (id: number, updatedTask: Partial<Task>) => void;
-  onDelete: (id: number) => void;
+  onUpdate: (_id: string, updatedTask: Partial<Task>) => void;
+  onDelete: (_id: string) => void;
   /** optional animation controls passed from TaskList */
   reveal?: boolean;
   animateDelay?: number; // ms
@@ -23,7 +23,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
   reveal = false,
   animateDelay = 0,
 }) => {
-  const { id, title, description, date, priority } = task;
+  const { _id, title, description, scheduledAt, priority } = task;
 
   const priorityColorClass =
     priority === "High"
@@ -39,18 +39,21 @@ const TaskCard: React.FC<TaskCardProps> = ({
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
   const [editPriority, setEditPriority] = useState(priority);
-  const [editDate, setEditDate] = useState(date);
+  const [editDate, setEditDate] = useState(scheduledAt);
 
   /** menu portal positioning */
   const moreBtnRef = useRef<HTMLButtonElement | null>(null);
-  const [menuCoords, setMenuCoords] = useState<{ top: number; left: number } | null>(null);
+  const [menuCoords, setMenuCoords] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
 
   /** HANDLERS */
   const onEdit = () => {
     setEditTitle(title);
     setEditDescription(description);
     setEditPriority(priority);
-    setEditDate(date);
+    setEditDate(scheduledAt);
     setIsEditing(true);
     closeMenu();
   };
@@ -60,22 +63,22 @@ const TaskCard: React.FC<TaskCardProps> = ({
   const closeMenu = () => setShowMenu(false);
 
   const handleSave = () => {
-    onUpdate(id, {
+    onUpdate(_id, {
       title: editTitle,
       description: editDescription,
       priority: editPriority,
-      date: editDate,
+      scheduledAt: editDate,
     });
     closeEdit();
   };
 
   const handleDelete = () => {
-    onDelete(id);
+    onDelete(_id);
     closeMenu();
   };
 
   const handleMarkDone = () => {
-    alert(`Task "${title}" marked as done! (ID: ${id})`);
+    alert(`Task "${title}" marked as done! (ID: ${_id})`);
     closeMenu();
   };
 
@@ -84,8 +87,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
     setEditTitle(title);
     setEditDescription(description);
     setEditPriority(priority);
-    setEditDate(date);
-  }, [title, description, priority, date]);
+    setEditDate(scheduledAt);
+  }, [title, description, priority, scheduledAt]);
 
   /** compute menu position */
   useEffect(() => {
@@ -118,12 +121,15 @@ const TaskCard: React.FC<TaskCardProps> = ({
       <div className="w-full flex justify-center my-2 relative">
         <div
           className="w-full max-w-[800px] bg-white border border-gray-200 shadow-sm rounded-2xl p-6 flex justify-between items-start hover:shadow-md transition-all min-h-[0px]"
-          aria-labelledby={`task-${id}-title`}
+          aria-labelledby={`task-${_id}-title`}
         >
           {/* LEFT */}
           <div className="flex flex-col flex-1">
             <div style={animStyle}>
-              <h3 id={`task-${id}-title`} className="text-lg font-semibold text-gray-900">
+              <h3
+                id={`task-${_id}-title`}
+                className="text-lg font-semibold text-gray-900"
+              >
                 {title}
               </h3>
               <p className="text-gray-500 mt-1">{description}</p>
@@ -134,14 +140,16 @@ const TaskCard: React.FC<TaskCardProps> = ({
                   className="flex items-center gap-1 cursor-pointer hover:text-[#2DC887] transition"
                 >
                   <Calendar className="w-4 h-4 text-gray-400" />
-                  {date}
+                  {scheduledAt}
                 </span>
 
                 <span
                   onClick={onEdit}
                   className="flex items-center gap-1 cursor-pointer hover:text-[#2DC887] transition"
                 >
-                  <div className={`w-3 h-3 rounded-full ${priorityColorClass}`}></div>
+                  <div
+                    className={`w-3 h-3 rounded-full ${priorityColorClass}`}
+                  ></div>
                   {priority} Priority
                 </span>
               </div>
@@ -206,23 +214,31 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 className="bg-white p-6 rounded-lg w-full max-w-md shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
               >
-                <h3 className="text-xl font-bold mb-4">Edit Task (ID: {id})</h3>
+                <h3 className="text-xl font-bold mb-4">
+                  Edit Task (ID: {_id})
+                </h3>
 
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Title
+                </label>
                 <input
                   className="w-full p-2 border border-gray-300 rounded mb-4"
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
                 />
 
-                <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
+                <label className="block text-sm font-bold text-gray-700 mb-1">
+                  Description
+                </label>
                 <textarea
                   className="w-full p-2 border border-gray-300 rounded mb-4"
                   value={editDescription}
                   onChange={(e) => setEditDescription(e.target.value)}
                 />
 
-                <label className="block text-sm font-bold text-gray-700 mb-1">Scheduled Date</label>
+                <label className="block text-sm font-bold text-gray-700 mb-1">
+                  Scheduled Date
+                </label>
                 <input
                   type="date"
                   className="w-full p-2 border border-gray-300 rounded mb-4"
@@ -230,7 +246,9 @@ const TaskCard: React.FC<TaskCardProps> = ({
                   onChange={(e) => setEditDate(e.target.value)}
                 />
 
-                <label className="block text-sm font-bold text-gray-700 mb-1">Priority</label>
+                <label className="block text-sm font-bold text-gray-700 mb-1">
+                  Priority
+                </label>
                 <select
                   className="w-full p-2 border border-gray-300 rounded mb-6"
                   value={editPriority}
