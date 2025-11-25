@@ -26,7 +26,7 @@ exports.getTaskById = async (req, res) => {
 };
 
 //CREATE - Add a new task
-exports.postTask = async (req, res) => {Z
+exports.postTask = async (req, res) => {
   try {
     /**Destructure the fields from the request body */
     const { 

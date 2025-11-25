@@ -17,7 +17,7 @@ export interface NewTaskInt {
   title: string;
   description: string;
   date: string;
-  priority: "High" | "Medium" | "Low";
+  priority: "high" | "medium" | "low";
 }
 
 export type Nothing = {
@@ -25,5 +25,12 @@ export type Nothing = {
   title: string;
   description: string;
   date: string;
-  priority: "High" | "Medium" | "Low";
+  priority: "high" | "medium" | "low";
+}
+
+export interface EditTask {  
+  title: string;
+  description: string;
+  date: string;
+  priority: "high" | "medium" | "low";
 };

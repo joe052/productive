@@ -30,7 +30,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
     title: "",
     description: "",
     date: "",
-    priority: "Medium",
+    priority: "medium",
   };
 
   /**FUNCTIONS */
