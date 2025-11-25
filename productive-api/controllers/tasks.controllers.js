@@ -29,34 +29,28 @@ exports.getTaskById = async (req, res) => {
 exports.postTask = async (req, res) => {
   try {
     /**Destructure the fields from the request body */
-    const { 
-      title, 
-      description, 
-      userId, 
-      scheduledAt, 
-      status, 
-      priority 
-    } = req.body;
+    const { title, description, userId, scheduledAt, status, priority } =
+      req.body;
 
     /**Create the new Task object */
     const newTask = new Task({
       title: title,
       description: description,
-      userId: userId,       
-      scheduledAt: scheduledAt, 
-      status: status,       
-      priority: priority    
+      userId: userId,
+      scheduledAt: scheduledAt,
+      status: status,
+      priority: priority,
     });
 
     /**Save to Database */
     const savedTask = await newTask.save();
-    
-    res.status(201).json(savedTask);
+
+    res.status(201).json({ message: "Task created successfully", savedTask });
   } catch (error) {
     // This catch block handles validation errors (e.g., missing required fields)
     res.status(500).json({
       message: error.message || "Error creating task.",
-      error: error 
+      error: error,
     });
   }
 };

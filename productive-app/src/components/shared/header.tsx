@@ -1,30 +1,40 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 const Header = () => {
   return (
     <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white border-b border-gray-200">
-      
-      <Link className="flex items-center gap-2 font-bold text-xl text-gray-800" href="/">Productive</Link>
-
+      <Link
+        className="flex items-center font-bold text-xl text-gray-800"
+        href="/"
+      >
+        <img src="calender.png" className="h-20 w-auto" />
+        Productive
+      </Link>
       <nav className="ml-auto flex gap-4 sm:gap-6">
-        <Link className="text-sm font-medium hover:underline underline-offset-4 text-emerald-500 flex flex items-center" href="/login">
-        <button 
-                type="submit" 
-                className="py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150"
-              >
-                Login
-              </button>
+        <Link
+          className="text-sm font-medium hover:underline underline-offset-4 text-emerald-500 flex flex items-center"
+          href="/login"
+        >
+          <button
+            type="submit"
+            className="py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150"
+          >
+            Login
+          </button>
         </Link>
-        <Link className="text-sm font-medium hover:underline underline-offset-4 text-emerald-500 flex items-center" href="/signup">
-        <button 
-                type="submit" 
-                className="py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150"
-              >
-                Signup
-              </button>
+        <Link
+          className="text-sm font-medium hover:underline underline-offset-4 text-emerald-500 flex items-center"
+          href="/signup"
+        >
+          <button
+            type="submit"
+            className="py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150"
+          >
+            Signup
+          </button>
         </Link>
       </nav>
-      
+
       {/* <div className="flex flex-1 justify-center px-4 lg:px-8">
         <div className="relative w-full max-w-md">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -55,9 +65,8 @@ const Header = () => {
             />
          </div>
       </div> */}
-
     </header>
-  )
-}
+  );
+};
 
 export default Header;

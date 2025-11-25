@@ -16,7 +16,7 @@ export interface SignUpInt {
 export interface NewTaskInt {  
   title: string;
   description: string;
-  date: string;
+  scheduledAt: string;
   priority: "high" | "medium" | "low";
 }
 
