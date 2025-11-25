@@ -1,8 +1,9 @@
 export interface Task {
-  id: number;
+  _id: string;
+  userId?: any;
   title: string;
   description: string;
-  date: string;
+  scheduledAt: string;
   priority: "High" | "Medium" | "Low";
 }
 
@@ -16,7 +17,7 @@ export interface NewTaskInt {
   title: string;
   description: string;
   scheduledAt: string;
-  priority: "High" | "Medium" | "Low";
+  priority: "high" | "medium" | "low";
 }
 
 export type Nothing = {

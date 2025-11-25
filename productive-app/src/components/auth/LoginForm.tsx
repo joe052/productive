@@ -107,6 +107,7 @@ const LogInForm: React.FC = () => {
               errors,
               touched,
               isValid,
+              isSubmitting,
               handleChange,
               handleBlur,
               handleSubmit,
@@ -181,18 +182,30 @@ const LogInForm: React.FC = () => {
                 <div className="flex justify-center">
                   <button
                     type="submit"
-                    disabled={!isValid}
-                    className={`w-full py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 disabled:bg-green-300 disabled:cursor-not-allowed disabled:blur-sm`}
+                    disabled={!isValid || loading || isSubmitting}
+                    className={`w-full py-2 px-4 border border-transparent rounded-md shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 disabled:bg-green-300 disabled:cursor-not-allowed `}
                   >
-                    Login
+                    {isSubmitting ? "Signing In..." : "Login"}
                   </button>
                 </div>
+                <p className="mt-6 text-center text-sm text-gray-600">
+                  Don't have an account?{" "}
+                  <Link
+                    href="/signup"
+                    className="font-medium text-green-500 hover:text-green-600 transition duration-150"
+                  >
+                    {" "}
+                    Sign up
+                  </Link>{" "}
+                </p>
               </form>
             )}
           </Formik>
 
           {/* ERROR BLOCK */}
-          {error && <p className="mt-4 text-center text-sm text-red-500">{error}</p>}
+          {error && (
+            <p className="mt-4 text-center text-sm text-red-500">{error}</p>
+          )}
 
           {/* <form className="space-y-6">
             <label
