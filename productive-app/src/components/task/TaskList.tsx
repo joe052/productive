@@ -6,75 +6,76 @@ import NewTaskButton from "../ui/AddTaskButton";
 import TaskCard from "./TaskCard";
 import TaskLander from "./TaskLander";
 import { Task } from "@/lib/interfaces";
+import { taskApi } from "@/lib/services/api";
 
 // Define the stagger constant
 const STAGGER_MS = 50;
 
 /** DUMMY TASKS */
 const DUMMY_TASKS: Task[] = [
-  {
-    id: 1,
-    title: "Go Shopping",
-    description: "Shop at Clean Shelf.",
-    date: "2025-11-20",
-    priority: "High",
-  },
-  {
-    id: 2,
-    title: "Make a Study Timetable",
-    description: "",
-    date: "2025-11-22",
-    priority: "Medium",
-  },
-  {
-    id: 3,
-    title: "Read New Blog Post",
-    description: "React state management article.",
-    date: "2025-11-23",
-    priority: "Low",
-  },
-  {
-    id: 4,
-    title: "Go Shopping",
-    description: "Shop at Clean Shelf.",
-    date: "2025-11-20",
-    priority: "High",
-  },
-  {
-    id: 5,
-    title: "Make a Study Timetable",
-    description: "",
-    date: "2025-11-22",
-    priority: "Medium",
-  },
-  {
-    id: 6,
-    title: "Read New Blog Post",
-    description: "React state management article.",
-    date: "2025-11-23",
-    priority: "Low",
-  },
-  {
-    id: 7,
-    title: "Go Shopping",
-    description: "Shop at Clean Shelf.",
-    date: "2025-11-20",
-    priority: "High",
-  },
-  {
-    id: 8,
-    title: "Make a Study Timetable",
-    description: "",
-    date: "2025-11-22",
-    priority: "Medium",
-  },
-  {
-    id: 9,
-    title: "Read New Blog Post",
-    description: "React state management article.",
-    date: "2025-11-23",
-    priority: "Low",
-  },
+  // {
+  //   id: 1,
+  //   title: "Go Shopping",
+  //   description: "Shop at Clean Shelf.",
+  //   date: "2025-11-20",
+  //   priority: "High",
+  // },
+  // {
+  //   id: 2,
+  //   title: "Make a Study Timetable",
+  //   description: "",
+  //   date: "2025-11-22",
+  //   priority: "Medium",
+  // },
+  // {
+  //   id: 3,
+  //   title: "Read New Blog Post",
+  //   description: "React state management article.",
+  //   date: "2025-11-23",
+  //   priority: "Low",
+  // },
+  // {
+  //   id: 4,
+  //   title: "Go Shopping",
+  //   description: "Shop at Clean Shelf.",
+  //   date: "2025-11-20",
+  //   priority: "High",
+  // },
+  // {
+  //   id: 5,
+  //   title: "Make a Study Timetable",
+  //   description: "",
+  //   date: "2025-11-22",
+  //   priority: "Medium",
+  // },
+  // {
+  //   id: 6,
+  //   title: "Read New Blog Post",
+  //   description: "React state management article.",
+  //   date: "2025-11-23",
+  //   priority: "Low",
+  // },
+  // {
+  //   id: 7,
+  //   title: "Go Shopping",
+  //   description: "Shop at Clean Shelf.",
+  //   date: "2025-11-20",
+  //   priority: "High",
+  // },
+  // {
+  //   id: 8,
+  //   title: "Make a Study Timetable",
+  //   description: "",
+  //   date: "2025-11-22",
+  //   priority: "Medium",
+  // },
+  // {
+  //   id: 9,
+  //   title: "Read New Blog Post",
+  //   description: "React state management article.",
+  //   date: "2025-11-23",
+  //   priority: "Low",
+  // },
 ];
 
 /** TASKLIST PROPS */
@@ -92,30 +93,37 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
   /**FUNCTIONS */
   /**Function to get tasks */
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTasks(DUMMY_TASKS);
-      setIsLoading(false); // Stop loading after data is set
+    const fetchTasks = async () => {
+      try {
+        /**Fetch tasks from API */
+        const response = await taskApi.get("/tasks");
 
-      // tiny tick so TaskCard internals can pick up initial styles before transitioning
-      setTimeout(() => {
-        setRevealed(true);
-      }, 20);
-    }, 1000);
+        /**Set tasks in state */
+        if (response.data) {
+          console.log(response.data);
+          setTasks(response.data);
+          setTimeout(() => setRevealed(true), 50); 
+        }
+      } catch (error) {
+        console.error("Failed to fetch tasks", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    /**Cleanup timer if component unmounts */
-    return () => clearTimeout(timer);
+    fetchTasks();
   }, []);
 
   /**Function to update a task */
-  const updateTask = (id: number, updated: Partial<Task>) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, ...updated } : t))
-    );
+  const updateTask = (_id: string, updated: Partial<Task>) => {
+    // setTasks((prev) =>
+    //   prev.map((t) => (t.id === id ? { ...t, ...updated } : t))
+    // );
   };
 
   /**Function to delete a task */
-  const deleteTask = (id: number) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id));
+  const deleteTask = (_id: string) => {
+    // setTasks((prev) => prev.filter((t) => t.id !== id));
   };
   // // empty state component
   // const isEmptyState = !isLoading && tasks.length ===0;
@@ -123,7 +131,7 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
   /**TEMPLATE */
   return (
     <div>
-<div className="shadow-md rounded-lg p-4 md:p-5 mx-auto mt-5 mb-5 max-w-[800px] bg-white sticky top-0 z-50">
+      <div className="shadow-md rounded-lg p-4 md:p-5 mx-auto mt-5 mb-5 max-w-[800px] bg-white sticky top-0 z-50">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className="text-lg font-bold text-gray-800 mr-2">
@@ -164,14 +172,14 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
           </div>
         ) : (
           /**TASK LIST HERE */
-          tasks.map((task, index) => (
+          tasks?.map((task, index) => (
             <TaskCard
-              key={task.id}
+              key={task._id}
               task={task}
               onUpdate={updateTask}
               onDelete={deleteTask}
               reveal={revealed}
-              animateDelay={index * STAGGER_MS}
+              animateDelay={Math.min(index, 8) * STAGGER_MS}
             />
           ))
         )}

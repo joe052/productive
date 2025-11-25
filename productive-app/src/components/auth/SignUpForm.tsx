@@ -61,6 +61,7 @@ const SignUpForm: React.FC = () => {
       /**Throw error if exists */
       if (error) throw error;
 
+      /**Alert user on success */
       if (response.data) {
         console.log(response.data);
         /**Alert success */
@@ -69,6 +70,7 @@ const SignUpForm: React.FC = () => {
       }
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");
+      console.error(error);
     } finally {
       setLoading(false);
     }

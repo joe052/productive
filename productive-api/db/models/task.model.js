@@ -1,18 +1,23 @@
 const mongoose = require("mongoose");
 
+const TASKSTATUS = {
+  PENDING: "pending",
+  COMPLETE: "complete",
+  INCOMPLETE: "incomplete",
+};
+
+const TASKPRIORITY = {
+  LOW: "low",
+  MEDIUM: "medium",
+  HIGH: "high",
+};
+
 const TaskSchema = new mongoose.Schema({
   userId: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-    },
-  ],
-  categoryId: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      required: false,
     },
   ],
   title: {
@@ -23,13 +28,19 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  isDone: {
-    type: Boolean,
-    default: false,
+  status: {
+    type: String,
+    enum: Object.values(TASKSTATUS),
+    default: TASKSTATUS.PENDING,
   },
   scheduledAt: {
     type: Date,
     required: true,
+  },
+  priority: {
+    type: String,
+    enum: Object.values(TASKPRIORITY),
+    default: TASKPRIORITY.MEDIUM,
   },
 });
 
