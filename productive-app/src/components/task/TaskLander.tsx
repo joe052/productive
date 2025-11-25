@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState} from "react"; //Added useState import
 import NewTask from "./NewTask";
 import calendar from "../../app/calender.png";
 import TaskCard from "./TaskCard";
@@ -8,6 +8,8 @@ import NewTaskButton from "../ui/AddTaskButton";
 
 /** COMPONENT */
 const tasklander: React.FC = () => {
+   //Add State to manage modal visibility
+   const [isNewTaskOpen, setIsNewTaskOpen] = useState(false);
 
   return (
     <div className="min-h- flex items-center justify-center  p-4">
@@ -28,12 +30,16 @@ const tasklander: React.FC = () => {
         <p className="text-gray-600 text-center">
           Add your first task!
         </p>
-{/* BUTTON  */}
-        <button className="w-full py-3 px-4 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200 flex items-center justify-center gap-2" onClick={() => alert("New Task Button Clicked!")}>
+{/* BUTTON - Update onclick handler */}
+        <button className="w-full py-3 px-4 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200 flex items-center justify-center gap-2" 
+        onClick={() => setIsNewTaskOpen(true)}  > {/*changed alert to open modal */}
           <span>+</span>
           <span>Add first Task</span>
         </button>
       </div>
+
+      {/*Add newtask modal component */}
+      <NewTask open={isNewTaskOpen} setOpen={setIsNewTaskOpen} />
     </div>
   );
 };
