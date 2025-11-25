@@ -38,37 +38,10 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
   /**FUNCTIONS */
   /**Function to create new task */
   const createTask = async (values: NewTaskInt) => {
-    // try {
-    //   const response = await fetch("/api/tasks", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(values),
-    //   });
-
-    //   const data = await response.json();
-
-    //   if (!response.ok) {
-    //     toast.error(data.error || "Failed to create task");
-    //     return null;
-    //   }
-
-    //   toast("Task created successfully!", {
-    //     className: "bg-sky-300 text-white rounded-xl shadow-md px-4 py-2",
-    //   });
-
-    //   return data;
-    // } catch (error) {
-    //   toast.error("Something went wrong");
-    //   console.error(error);
-    //   return null;
-    // }
-
     try {
       /**Post user to API */
       const response = await taskApi.post("/tasks", {
-        userId: "dfdfdfdfdfdfd",
+        userId: "69243de6dd7a8699e2e73971",
         title: values.title,
         description: values.description,
         scheduledAt: values.scheduledAt,
