@@ -144,7 +144,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                   className="flex items-center gap-1 cursor-pointer hover:text-[#2DC887] transition"
                 >
                   <Calendar className="w-4 h-4 text-gray-400" />
-                  {scheduledAt}
+                  { new Date(scheduledAt).toLocaleDateString()}
                 </span>
 
                 <span
