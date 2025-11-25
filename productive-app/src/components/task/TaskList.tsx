@@ -52,7 +52,7 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
   /** TEMPLATE */
   return (
     <div>
-      <div className="shadow-md rounded-lg p-4 md:p-5 mx-auto mt-5 mb-5 max-w-[800px] bg-white sticky top-0 z-50">
+      <div className="shadow-md  rounded-lg p-4 md:p-5 mx-auto mt-5 mb-5 max-w-[800px] bg-white sticky top-0 z-40">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className="text-lg font-bold text-gray-800 mr-2">
@@ -77,7 +77,7 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
       {/* CONDITIONAL RENDERING BLOCK */}
       <div className="p-4 space-y-4 max-w-[800px] mx-auto">
 
-        {/* 🔥 ERROR STATE */}
+        {/*ERROR STATE */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md text-sm mb-4">
             {error}
@@ -92,7 +92,7 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
               Fetching tasks...
             </p>
           </div>
-        ) : !error && tasks.length === 0 ? ( // ⬅ prevent empty state if error occurs
+        ) : !error && tasks.length === 0 ? ( //prevent empty state if error occurs
           <div>
             <TaskLander />
           </div>
