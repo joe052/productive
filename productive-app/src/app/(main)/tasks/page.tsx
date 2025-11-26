@@ -1,30 +1,27 @@
 "use client";
 
-import React, { useState }  from "react";
+import React, { useState } from "react";
 import NewTask from "@/components/task/NewTask";
-import { taskApi } from "@/lib/services/api";
 import TaskList from "@/components/task/TaskList";
-import TaskLander from "@/components/task/TaskLander";
+import { createClient } from "@/lib/supabase/client";
+import { redirect } from "next/navigation";
 
 /**COMPONENT */
-// const Tasks: React.FC = () => {
-//   /**VARIABLES */
-
-//   /**FUNCTIONS */
-
-//   /**TEMPLATE */
-//   return (
-//     <div className="">
-//       {/* <TaskLander/> */}
-//       <NewTask/>
-//       {/* <TaskList /> */}
-//     </div>
-//   );
-// };
-
 const Tasks: React.FC = () => {
+  /**VARIABLES */
   const [open, setOpen] = useState(false); // modal state
+  // const supabase = await createClient();
 
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
+
+  // /**Redirect to login if user is not logged in */
+  // if (!user) {
+  //   redirect("/login");
+  // }
+
+  /**TEMPLATE */
   return (
     <div>
       {/* Modal */}

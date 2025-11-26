@@ -5,7 +5,7 @@ export async function updateSession(request: NextRequest) {
   /**Create an unmodified response */
   let supabaseResponse = NextResponse.next({ request });
 
-  /**Initialize supabase client */
+  /**Initialize supabase server client */
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
@@ -36,6 +36,8 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+//   console.log(user);
 
   /**AUTH GUARD LOGIC */
   const path = request.nextUrl.pathname;
