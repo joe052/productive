@@ -208,7 +208,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
       {/* EDIT MODAL */}
       {isEditing && portalTarget
         ? ReactDOM.createPortal(
-            <div className="fixed inset-0 bg-black/40 flex justify-center items-center p-4 z-50"
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center p-4 z-50"
               role="dialog"
               aria-modal="true"
               onClick={closeEdit}
