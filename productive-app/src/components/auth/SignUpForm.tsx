@@ -37,6 +37,9 @@ const SignUpForm: React.FC = () => {
     password: Yup.string()
       .required("Password is required")
       .min(6, "Password must be at least 6 characters"), // Matching Login logic (min 6)
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password")], "Passwords must match")
+      .required("Confirm Password is required"),
   });
 
   /**FUNCTIONS */
@@ -67,6 +70,10 @@ const SignUpForm: React.FC = () => {
         console.log(response.data);
         /**Alert success */
         alert(response.data.message);
+        
+        /** Redirect to login page automatically */
+        router.push("/login");
+        
         return response.data;
       }
     } catch (error) {
@@ -129,6 +136,7 @@ const SignUpForm: React.FC = () => {
               lastName: "",
               email: "",
               password: "",
+              confirmPassword: "",
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
@@ -279,6 +287,40 @@ const SignUpForm: React.FC = () => {
                   {errors.password && touched.password && (
                     <p className="mt-1 text-xs text-red-500">
                       {errors.password}
+                    </p>
+                  )}
+                </div>
+
+                {/* CONFIRM PASSWORD */}
+                <div className="">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Confirm Password
+                  </label>
+                  <div
+                    className={`rounded-md border ${
+                      errors.confirmPassword && touched.confirmPassword
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      value={values.confirmPassword}
+                      onChange={handleChange("confirmPassword")}
+                      onBlur={handleBlur("confirmPassword")}
+                      className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+                      placeholder="Confirm Password"
+                    />
+                  </div>
+                  {/* Display error if passwords don't match */}
+                  {errors.confirmPassword && touched.confirmPassword && (
+                    <p className="mt-1 text-xs text-red-500">
+                      {errors.confirmPassword}
                     </p>
                   )}
                 </div>
