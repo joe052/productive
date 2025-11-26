@@ -20,13 +20,24 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
   /**VARIABLES */
   if (!open) return null; // Don't render if modal is closed
 
-  /** VALIDATION SCHEMA */
-  const TaskValidationSchema = Yup.object().shape({
-    title: Yup.string().required("Task title is required"),
-    description: Yup.string().required("Task description is required").max(200),
-    scheduledAt: Yup.date().required("Task date is required"),
-    priority: Yup.string().required("Priority is required"),
-  });
+/** VALIDATION SCHEMA */
+const TaskValidationSchema = Yup.object().shape({
+  title: Yup.string().required("Task title is required"),
+  description: Yup.string().required("Task description is required").max(200),
+  scheduledAt: Yup.date()
+    .required("Task date is required")
+    .test(
+      'is-future-date',
+      'Cannot schedule tasks in the past',
+      function(value) {
+        if (!value) return false;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return value >= today;
+      }
+    ),
+  priority: Yup.string().required("Priority is required"),
+});
 
   /** INITIAL VALUES */
   const initialValues: NewTaskInt = {
@@ -89,7 +100,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
 
   /**TEMPLATE */
   return (
-    <div className="fixed inset-0 bg-black/40 flex justify-center items-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center p-4 z-50">
       <div className="w-full max-w-xl rounded-xl shadow-lg p-6 bg-white relative">
         {/* Modal Header */}
         <h2 className="text-xl font-semibold mb-4">
@@ -169,6 +180,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
                 <Field
                   type="date"
                   name="scheduledAt"
+                  min={new Date().toISOString().split('T')[0]}
                   className={`w-full border rounded-lg px-3 py-2 focus:outline-none
                 ${
                   touched.scheduledAt && errors.scheduledAt
@@ -185,7 +197,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
               {/* Priority */}
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Priority
+                  Priority 
                 </label>
                 <div className="flex items-center gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -219,7 +231,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
                     handleReset();
                     setOpen(false);
                   }}
-                  className="px-4 py-2 rounded-lg border text-white font-bold bg-gray-400 hover:bg-gray-600"
+                  className="px-4 py-2 rounded-lg border text-white font-bold bg-gray-400 hover:bg-gray-600 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -228,7 +240,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
                 <button
                   type="submit"
                   disabled={!isValid}
-                  className="px-5 py-2 rounded-lg bg-green-500 text-white hover:bg-green-700"
+                  className="px-5 py-2 rounded-lg bg-green-500 text-white hover:bg-green-700 cursor-pointer"
                 >
                   {isSubmitting ? "Submitting..." : "Create Task"}
                 </button>
