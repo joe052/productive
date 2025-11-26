@@ -183,7 +183,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
               {/* Priority */}
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Priority
+                  Priority 
                 </label>
                 <div className="flex items-center gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">

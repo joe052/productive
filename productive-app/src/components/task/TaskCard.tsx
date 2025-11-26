@@ -204,18 +204,17 @@ const TaskCard: React.FC<TaskCardProps> = ({
       {/* EDIT MODAL */}
       {isEditing && portalTarget
         ? ReactDOM.createPortal(
-            <div
-              className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 p-4"
+            <div className="fixed inset-0 bg-black/40 flex justify-center items-center p-4 z-50"
               role="dialog"
               aria-modal="true"
               onClick={closeEdit}
             >
-              <div
-                className="bg-white p-6 rounded-lg w-full max-w-md shadow-2xl"
+              <div className="w-full max-w-xl rounded-xl shadow-lg p-6 bg-white relative"
                 onClick={(e) => e.stopPropagation()}
               >
                 <h3 className="text-xl font-bold mb-4">
-                  Edit Task (ID: {_id})
+                  <span className="text-black">Edit </span>
+                  <span className="text-green-500">Task </span>
                 </h3>
 
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -231,7 +230,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                   Description
                 </label>
                 <textarea
-                  className="w-full p-2 border border-gray-300 rounded mb-4"
+                  className="w-full p-2 border border-gray-300 rounded mb-4 resize-none"
                   value={editDescription}
                   onChange={(e) => setEditDescription(e.target.value)}
                 />
