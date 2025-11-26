@@ -136,14 +136,14 @@ const TaskCard: React.FC<TaskCardProps> = ({
               e.stopPropagation();
               handleMarkDone();
             }}
-            className="absolute top-6 right-6 flex items-center gap-1 bg-[#2DC887] text-white text-sm font-semibold px-3 py-1 rounded-md shadow-sm hover:bg-[#26A671] transition-all"
+            className="absolute top-6 right-6 flex items-center  gap-1 bg-[#FCFCFC] text-[#2DC887] outline-none text-sm px-3 py-1 rounded-md hover:border-2 shadow-sm transition-all"
             aria-label="Mark task as done"
           >
             Mark Done <CheckCircle className="w-4 h-4" />
           </button>
 
           {/* Edit and Delete Buttons - Bottom Right */}
-          <div className="flex items-center gap-2 mt-4 self-end md:self-auto md:absolute md:bottom-4 md:right-6">
+          <div className="flex items-center gap-8 mt-4 self-end md:self-auto md:absolute md:bottom-4 md:right-6">
             <button
               onClick={(e) => {
                 e.stopPropagation();
