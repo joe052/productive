@@ -120,7 +120,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
       {/* MAIN CARD */}
       <div className="w-full flex justify-center my-2 relative">
         <div
-          className="w-full max-w-[800px] bg-white border border-gray-200 shadow-sm rounded-2xl p-6 flex justify-between items-start hover:shadow-md transition-all min-h-[0px]"
+          className="w-full max-w-[800px] bg-white border border-gray-200 shadow-sm rounded-2xl p-6 flex justify-between items-start hover:shadow-md transition-all min-h-0"
           aria-labelledby={`task-${_id}-title`}
         >
           {/* LEFT */}
@@ -157,7 +157,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
           </div>
 
           {/* RIGHT */}
-          <div className="flex items-start gap-4 flex-shrink-0 mt-4 md:mt-0 relative">
+          <div className="flex items-start gap-4 shrink-0 mt-4 md:mt-0 relative">
             <button onClick={onEdit}>
               <Pencil className="w-5 h-5 text-[#2DC887] hover:text-[#26A671] transition cursor-pointer" />
             </button>

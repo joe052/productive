@@ -3,32 +3,32 @@
 import React, { useState } from "react";
 import NewTask from "@/components/task/NewTask";
 import TaskList from "@/components/task/TaskList";
-import { createClient } from "@/lib/supabase/client";
-import { redirect } from "next/navigation";
 
 /**COMPONENT */
 const Tasks: React.FC = () => {
   /**VARIABLES */
   const [open, setOpen] = useState(false); // modal state
-  // const supabase = await createClient();
+  /**State to track when data should be refreshed */
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // const {
-  //   data: { user },
-  // } = await supabase.auth.getUser();
-
-  // /**Redirect to login if user is not logged in */
-  // if (!user) {
-  //   redirect("/login");
-  // }
+  /**FUNCTIONS */
+  /**Function to trigger the refresh */
+  const handleTaskCreated = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
   /**TEMPLATE */
   return (
     <div>
       {/* Modal */}
-      <NewTask open={open} setOpen={setOpen} />
+      <NewTask
+        open={open}
+        setOpen={setOpen}
+        onTaskCreated={handleTaskCreated}
+      />
 
       {/* Task list with button */}
-      <TaskList setOpen={setOpen} />
+      <TaskList setOpen={setOpen} refreshTrigger={refreshTrigger} />
     </div>
   );
 };
