@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { taskApi } from "@/lib/services/api";
 import { SignUpInt } from "@/lib/interfaces";
+import axios from "axios";
 
 /**COMPONENT */
 const SignUpForm: React.FC = () => {
@@ -69,7 +70,29 @@ const SignUpForm: React.FC = () => {
         return response.data;
       }
     } catch (error) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      let errorMessage = "An unexpected error occurred";
+
+      /**Check if it is an Axios Error */
+      if (axios.isAxiosError(error)) {
+        /**check if the response exists (server responded with 4xx or 5xx) */
+        if (error.response && error.response.data) {
+          /**Capture specific 'error' field or 'message' field from backend */
+          errorMessage =
+            error.response.data.error ||
+            error.response.data.message ||
+            error.message;
+
+          /** Log the specific backend data for debugging */
+          // console.log("Backend Error Data:", error.response.data);
+        } else {
+          /**No response received (e.g., Network Error, server down) */
+          errorMessage = error.message;
+        }
+      } else if (error instanceof Error) {
+        /**Standard JS Error */
+        errorMessage = error.message;
+      }
+      setError(errorMessage);
       console.error(error);
     } finally {
       setLoading(false);
@@ -124,6 +147,7 @@ const SignUpForm: React.FC = () => {
               errors,
               touched,
               isValid,
+              isSubmitting,
               handleChange,
               handleBlur,
               handleSubmit,
@@ -263,10 +287,10 @@ const SignUpForm: React.FC = () => {
                 <div className="flex justify-center pt-2">
                   <button
                     type="submit"
-                    disabled={!isValid || loading}
+                    disabled={!isValid || loading || isSubmitting}
                     className={`w-full py-2 px-4 border border-transparent rounded-md shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 disabled:bg-green-300 disabled:cursor-not-allowed `}
                   >
-                    {loading ? "Creating Account..." : "Create Account"}
+                    {isSubmitting ? "Creating Account..." : "Create Account"}
                   </button>
                 </div>
               </form>
