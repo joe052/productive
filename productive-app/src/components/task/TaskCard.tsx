@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import { Calendar, MoreVertical, Pencil } from "lucide-react";
+import { Calendar, CheckCircle, Trash2, MoreVertical, Pencil } from "lucide-react";
 import { Task } from "@/lib/interfaces";
 
 interface TaskCardProps {
@@ -138,32 +138,38 @@ const TaskCard: React.FC<TaskCardProps> = ({
                   <div className={`w-3 h-3 rounded-full ${priorityColorClass}`}></div>
                   {priority} Priority
                 </span>
+                
+                {/*UPDATED: Mark as Done Button */}
+                <button 
+                  onClick={handleMarkDone}
+                  className="absolute top-6 right-6 flex items-center gap-1 bg-[#2DC887] text-white text-sm font-semibold px-3 py-1 rounded-md shadow-sm hover:bg-[#26A671] transition-all"
+                  aria-label="Mark task as done"
+                >
+                  Mark Done 
+                  <CheckCircle className="w-4 h-4" />
+                </button>
+                
               </div>
             </div>
-          </div>
+            
+            {/* NEW: Edit and Delete Buttons at the bottom right */}
+            <div className="flex items-center gap-2 mt-4 self-end md:self-auto md:absolute md:bottom-4 md:right-6">
+              <button 
+                onClick={handleDelete}
+                className="text-gray-500 hover:text-red-600 transition"
+                aria-label="Delete task"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+              <button 
+                onClick={onEdit}
+                className="text-gray-500 hover:text-[#2DC887] transition"
+                aria-label="Edit task"
+              >
+                <Pencil className="w-5 h-5 text-[#2DC887] hover:text-[#26A671] transition cursor-pointer" />
+              </button>
+            </div>
 
-          <div className="flex items-start gap-4 flex-shrink-0 mt-4 md:mt-0 relative">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit();
-              }}
-              className="text-[#2DC887] hover:text-[#26A671] transition"
-              aria-label="Edit task"
-            >
-              <Pencil className="w-5 h-5" />
-            </button>
-            <button
-              ref={moreBtnRef}
-              onClick={(e) => {
-                e.stopPropagation();
-                onMenu();
-              }}
-              className="text-gray-500 hover:text-black transition"
-              aria-label="More options"
-            >
-              <MoreVertical className="w-5 h-5" />
-            </button>
           </div>
         </div>
       </div>
@@ -253,7 +259,11 @@ const TaskCard: React.FC<TaskCardProps> = ({
                     Cancel
                   </button>
                   <button
-                    className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+                    className="bg-[#2DC887] text-white font-bold text-sm px-4 py-2 rounded-md
+                          shadow-md 
+                          hover:bg-[#26A671] hover:shadow-lg 
+                          transition-all duration-300
+                          cursor-pointer"
                     onClick={handleSave}
                   >
                     Save Changes
