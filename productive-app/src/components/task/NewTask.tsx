@@ -21,7 +21,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
 const TaskValidationSchema = Yup.object().shape({
   title: Yup.string().required("Task title is required"),
   description: Yup.string().required("Task description is required").max(200),
-  date: Yup.date()
+  scheduledAt: Yup.date()
     .required("Task date is required")
     .test(
       'is-future-date',
@@ -35,6 +35,13 @@ const TaskValidationSchema = Yup.object().shape({
     ),
   priority: Yup.string().required("Priority is required"),
 });
+  /** VALIDATION SCHEMA */
+  const TaskValidationSchema = Yup.object().shape({
+    title: Yup.string().required("Task title is required"),
+    description: Yup.string().required("Task description is required").max(200),
+    date: Yup.date().required("Task date is required"),
+    priority: Yup.string().required("Priority is required"),
+  });
 
   /** INITIAL VALUES */
   const initialValues: NewTaskInt = {
@@ -133,6 +140,8 @@ const TaskValidationSchema = Yup.object().shape({
                 <Field
                   type="date"
                   name="scheduledAt"
+                  min={new Date().toISOString().split('T')[0]}
+                  name="date"
                   className={`w-full border rounded-lg px-3 py-2 focus:outline-none
                 ${
                   touched.scheduledAt && errors.scheduledAt
