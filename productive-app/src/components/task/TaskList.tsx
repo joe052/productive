@@ -1,32 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import React from "react";
 import NewTaskButton from "../ui/AddTaskButton";
 import TaskCard from "./TaskCard";
 import TaskLander from "./TaskLander";
 import { Task } from "@/lib/interfaces";
 import { taskApi } from "@/lib/services/api";
+import TaskDetailModal from "../ui/TaskDetailModal";
 
-// Define the stagger constant
 const STAGGER_MS = 50;
 
-/** TASKLIST PROPS */
 interface TaskListProps {
   setOpen: (value: boolean) => void;
   refreshTrigger: number;
 }
 
 /** COMPONENT */
-
 const TaskList: React.FC<TaskListProps> = ({ setOpen, refreshTrigger }) => {
   /** VARIABLES */
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [revealed, setRevealed] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  /** FETCH TASKS */
+  /*FUNCTIONS */
+
+  /** Function to get tasks */
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -46,51 +46,36 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen, refreshTrigger }) => {
         setIsLoading(false);
       }
     };
-
     fetchTasks();
   }, [refreshTrigger]);
 
-  /** UPDATE TASK */
-  const handleUpdateTask = async (_id: string, updatedTask: Partial<Task>) => {
-    setIsLoading(true);
-    setError(null);
+  const openTaskDetail = (task: Task) => setSelectedTask(task);
+  const closeTaskDetail = () => setSelectedTask(null)
 
+  // Update task
+  const handleUpdateTask = async (_id: string, updatedTask: Partial<Task>) => {
     try {
       const response = await taskApi.patch(`/tasks/${_id}`, updatedTask);
-      if (response.data) {
-        setTasks((prev) =>
-          prev.map((task) => (task._id === _id ? response.data : task))
-        );
-        setTimeout(() => setRevealed(true), 50);
-      }
+      setTasks((prev) => prev.map((t) => (t._id === _id ? response.data : t)));
     } catch (err) {
-      console.error("Failed to update task:", err);
-      setError("Unable to update the task at the moment. Please try again later.");
-    } finally {
-      setIsLoading(false);
+      setError("Failed to update task. Please try again.");
     }
   };
 
-  /** DELETE TASK */
+  // Delete task
   const handleDeleteTask = async (_id: string) => {
-    setIsLoading(true);
-    setError(null);
-
     try {
       await taskApi.delete(`/tasks/${_id}`);
-      setTasks((prev) => prev.filter((task) => task._id !== _id));
+      setTasks((prev) => prev.filter((t) => t._id !== _id));
     } catch (err) {
-      console.error("Failed to delete task:", err);
-      setError("Unable to delete the task at the moment. Please try again later.");
-    } finally {
-      setIsLoading(false);
+      setError("Failed to delete task. Please try again.");
     }
   };
 
-  /** TEMPLATE */
+  /* TEMPLATE */
+
   return (
     <div>
-      {/* HEADER */}
       <div className="shadow-md rounded-lg p-4 md:p-5 mx-auto mt-5 mb-5 max-w-[800px] bg-white sticky top-0 z-40">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -99,13 +84,12 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen, refreshTrigger }) => {
               {isLoading ? "..." : `${tasks.length} active`}
             </span>
           </div>
-          <div>
+          {!isLoading && tasks.length > 0 && (
             <NewTaskButton onClick={() => setOpen(true)} />
-          </div>
+          )}
         </div>
       </div>
 
-      {/* TASK LIST */}
       <div className="p-4 space-y-4 max-w-[800px] mx-auto">
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md text-sm mb-4">
@@ -127,12 +111,21 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen, refreshTrigger }) => {
               task={task}
               onUpdate={handleUpdateTask}
               onDelete={handleDeleteTask}
+              onClick={() => openTaskDetail(task)}
               reveal={revealed}
               animateDelay={Math.min(index, 8) * STAGGER_MS}
             />
           ))
         )}
       </div>
+
+      {selectedTask && (
+        <TaskDetailModal
+          task={selectedTask}
+          open={true}
+          onClose={closeTaskDetail}
+        />
+      )}
     </div>
   );
 };

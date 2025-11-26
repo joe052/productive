@@ -5,9 +5,19 @@ import NewTask from "./NewTask";
 
 /** COMPONENT */
 const tasklander: React.FC = () => {
+  /**VARIABLES */
   /**Add State to manage modal visibility */
   const [isNewTaskOpen, setIsNewTaskOpen] = useState(false);
+  /**State to track when data should be refreshed */
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+  /**FUNCTIONS */
+  /**Function to trigger the refresh */
+  const handleTaskCreated = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
+
+  /**TEMPLATE */
   return (
     <div className="min-h- flex items-center justify-center  p-4">
       <div className="w-full max-w-md p-8  rounded-lg shadow-lg flex flex-col items-center gap-6">
@@ -39,7 +49,7 @@ const tasklander: React.FC = () => {
       </div>
 
       {/*Add newtask modal component */}
-      <NewTask open={isNewTaskOpen} setOpen={setIsNewTaskOpen} />
+      <NewTask open={isNewTaskOpen} setOpen={setIsNewTaskOpen} onTaskCreated={handleTaskCreated} />
     </div>
   );
 };

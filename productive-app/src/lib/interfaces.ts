@@ -17,7 +17,7 @@ export interface NewTaskInt {
   title: string;
   description: string;
   scheduledAt: string;
-  priority: "High" | "Medium" | "Low";
+  priority: "high" | "medium" | "low";
 }
 
 export type Nothing = {

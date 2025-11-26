@@ -89,7 +89,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
 
   /**TEMPLATE */
   return (
-    <div className="fixed inset-0 bg-black/40 flex justify-center items-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center p-4 z-50">
       <div className="w-full max-w-xl rounded-xl shadow-lg p-6 bg-white relative">
         {/* Modal Header */}
         <h2 className="text-xl font-semibold mb-4">
@@ -185,7 +185,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
               {/* Priority */}
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Priority
+                  Priority 
                 </label>
                 <div className="flex items-center gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -219,7 +219,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
                     handleReset();
                     setOpen(false);
                   }}
-                  className="px-4 py-2 rounded-lg border text-white font-bold bg-gray-400 hover:bg-gray-600"
+                  className="px-4 py-2 rounded-lg border text-white font-bold bg-gray-400 hover:bg-gray-600 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -228,7 +228,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
                 <button
                   type="submit"
                   disabled={!isValid}
-                  className="px-5 py-2 rounded-lg bg-green-500 text-white hover:bg-green-700"
+                  className="px-5 py-2 rounded-lg bg-green-500 text-white hover:bg-green-700 cursor-pointer"
                 >
                   {isSubmitting ? "Submitting..." : "Create Task"}
                 </button>
