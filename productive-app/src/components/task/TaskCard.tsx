@@ -243,12 +243,13 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 <label className="block text-sm font-bold text-gray-700 mb-1">
                   Scheduled Date
                 </label>
-                <input
-                  type="date"
-                  className="w-full p-2 border border-gray-300 rounded mb-4"
-                  value={editDate}
-                  onChange={(e) => setEditDate(e.target.value)}
-                />
+           <input
+            type="date"
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+            value={editDate}
+            min={new Date().toISOString().split('T')[0]}
+            onChange={(e) => setEditDate(e.target.value)}
+          />
 
                 <label className="block text-sm font-bold text-gray-700 mb-1">
                   Priority

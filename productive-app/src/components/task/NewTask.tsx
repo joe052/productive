@@ -19,13 +19,24 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
   /**VARIABLES */
   if (!open) return null; // Don't render if modal is closed
 
-  /** VALIDATION SCHEMA */
-  const TaskValidationSchema = Yup.object().shape({
-    title: Yup.string().required("Task title is required"),
-    description: Yup.string().required("Task description is required").max(200),
-    scheduledAt: Yup.date().required("Task date is required"),
-    priority: Yup.string().required("Priority is required"),
-  });
+/** VALIDATION SCHEMA */
+const TaskValidationSchema = Yup.object().shape({
+  title: Yup.string().required("Task title is required"),
+  description: Yup.string().required("Task description is required").max(200),
+  scheduledAt: Yup.date()
+    .required("Task date is required")
+    .test(
+      'is-future-date',
+      'Cannot schedule tasks in the past',
+      function(value) {
+        if (!value) return false;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return value >= today;
+      }
+    ),
+  priority: Yup.string().required("Priority is required"),
+});
 
   /** INITIAL VALUES */
   const initialValues: NewTaskInt = {
@@ -167,6 +178,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen }) => {
                 <Field
                   type="date"
                   name="scheduledAt"
+                  min={new Date().toISOString().split('T')[0]}
                   className={`w-full border rounded-lg px-3 py-2 focus:outline-none
                 ${
                   touched.scheduledAt && errors.scheduledAt
