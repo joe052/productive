@@ -93,7 +93,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen, onTaskCreated }) => {
         {/* Modal Header */}
         <h2 className="text-xl font-semibold mb-4">
           <span className="text-black">Create </span>
-          <span className="text-green-500">New </span>
+          <span className="text-[#2DC887]">New </span>
           <span className="text-black">Task </span>
         </h2>
         <Formik
@@ -127,7 +127,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen, onTaskCreated }) => {
                 ${
                   touched.title && errors.title
                     ? "border-red-500 focus:ring-1 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-1 focus:ring-green-500"
+                    : "border-gray-300 focus:ring-1 focus:ring-[#2DC887]"
                 }`}
                 />
                 <ErrorMessage
@@ -150,7 +150,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen, onTaskCreated }) => {
                ${
                  touched.description && errors.description
                    ? "border-red-500 focus:ring-1 focus:ring-red-500"
-                   : "border-gray-300 focus:ring-1 focus:ring-green-500"
+                   : "border-gray-300 focus:ring-1 focus:ring-[#2DC887]"
                }`}
                 />
                 <ErrorMessage
@@ -172,7 +172,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen, onTaskCreated }) => {
                 ${
                   touched.scheduledAt && errors.scheduledAt
                     ? "border-red-500 focus:ring-1 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-1 focus:ring-green-500"
+                    : "border-gray-300 focus:ring-1 focus:ring-[#2DC887]"
                 }`}
                 />
                 <ErrorMessage
@@ -188,20 +188,60 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen, onTaskCreated }) => {
                 </label>
                 <div className="flex items-center gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <Field type="radio" name="priority" value="low" />
+                    <Field
+                      type="radio"
+                      name="priority"
+                      value="low"
+                      className="peer sr-only"
+                    />
+
+                    <span
+                      className="
+      w-4 h-4 rounded-full border-2 border-gray-400
+      peer-checked:border-transparent peer-checked:bg-[#2DC887]
+    "
+                    ></span>
+
                     <span>Low</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <Field type="radio" name="priority" value="medium" />
+                    <Field
+                      type="radio"
+                      name="priority"
+                      value="medium"
+                      className="peer sr-only"
+                    />
+
+                    <span
+                      className="
+      w-4 h-4 rounded-full border-2 border-gray-400
+      peer-checked:border-transparent peer-checked:bg-yellow-500
+    "
+                    ></span>
+
                     <span>Medium</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <Field type="radio" name="priority" value="high" />
+                    <Field
+                      type="radio"
+                      name="priority"
+                      value="high"
+                      className="peer sr-only"
+                    />
+
+                    <span
+                      className="
+      w-4 h-4 rounded-full border-2 border-gray-400
+      peer-checked:border-transparent peer-checked:bg-red-500
+    "
+                    ></span>
+
                     <span>High</span>
                   </label>
                 </div>
+
                 <ErrorMessage
                   name="priority"
                   component="p"
@@ -227,7 +267,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen, onTaskCreated }) => {
                 <button
                   type="submit"
                   disabled={!isValid}
-                  className="px-5 py-2 rounded-lg bg-green-500 text-white hover:bg-green-700 cursor-pointer"
+                  className="px-5 py-2 rounded-lg bg-[#2DC887] text-white hover:bg-[#26a671] cursor-pointer"
                 >
                   {isSubmitting ? "Submitting..." : "Create Task"}
                 </button>
