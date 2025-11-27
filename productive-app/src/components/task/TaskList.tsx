@@ -1,35 +1,37 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import React from "react";
 import NewTaskButton from "../ui/AddTaskButton";
 import TaskCard from "./TaskCard";
 import TaskLander from "./TaskLander";
 import { Task } from "@/lib/interfaces";
 import { taskApi } from "@/lib/services/api";
+import TaskDetailModal from "../ui/TaskDetailModal";
+import { toast } from "sonner"; 
 
-// Define the stagger constant
 const STAGGER_MS = 50;
 
-/** TASKLIST PROPS */
+/**INTERFACES & TYPES */
 interface TaskListProps {
-  setOpen: (value: boolean) => void; // receive setOpen from parent
+  setOpen: (value: boolean) => void;
+  refreshTrigger: number;
 }
 
 /** COMPONENT */
-const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
+const TaskList: React.FC<TaskListProps> = ({ setOpen, refreshTrigger }) => {
   /** VARIABLES */
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [revealed, setRevealed] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null); // <-- ADDED
+  const [error, setError] = useState<string | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
+  /**FUNCTIONS */
   /** Function to get tasks */
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const response = await taskApi.get("/tasks");
-
         if (response.data) {
           setTasks(response.data);
           setTimeout(() => setRevealed(true), 50);
@@ -37,7 +39,7 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
       } catch (err) {
         console.error("Failed to fetch tasks:", err);
 
-        // Error Message
+        /**Error Message */
         setError(
           "Unable to load your tasks at the moment. Please try again later."
         );
@@ -45,46 +47,108 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
         setIsLoading(false);
       }
     };
-
     fetchTasks();
-  }, []);
+  }, [refreshTrigger]);
 
-  /** TEMPLATE */
+  const openTaskDetail = (task: Task) => setSelectedTask(task);
+  const closeTaskDetail = () => setSelectedTask(null);
+
+  /**Function to Update task */
+  const handleUpdateTask = async (_id: string, updatedTask: Partial<Task>) => {
+    try {
+      const response = await taskApi.patch(`/tasks/${_id}`, updatedTask);
+      setTasks((prev) => prev.map((t) => (t._id === _id ? response.data : t)));
+    } catch (err) {
+      setError("Failed to update task. Please try again.");
+    }
+  };
+
+  /**Function to  Delete task */
+  const deleteTaskApiCall = async (_id: string) => {
+    try {
+      await taskApi.delete(`/tasks/${_id}`);
+      setTasks((prev) => prev.filter((t) => t._id !== _id));
+      setSelectedTask(null); // Close the detail modal if the selected task is deleted
+      
+      //Success message using Sonner
+      toast.success("Task deleted successfully!", {
+        description: "Your task has been permanently removed.",
+      });
+
+    } catch (err) {
+      setError("Failed to delete task. Please try again.");
+      
+      // OPTIONAL: Error message using Sonner
+      toast.error("Failed to delete task.", {
+        description: "An error occurred while communicating with the API.",
+      });
+    }
+  };
+
+  // SONNER CONFIRMATION
+  const handleDeleteTask = (_id: string) => {
+    //custom Sonner toast for confirmation
+    toast.custom((t) => (
+      <div className="bg-white border border-gray-200 shadow-lg rounded-lg p-4 flex flex-col w-full max-w-sm">
+        <p className="text-sm font-semibold text-gray-800">
+          Are you sure you want to delete this task?
+        </p>
+        <p className="text-xs text-gray-500 mt-1">
+          This action cannot be undone.
+        </p>
+        <div className="flex justify-end space-x-2 mt-4">
+          <button
+            onClick={() => toast.dismiss(t)}
+            className="text-sm px-3 py-1.5 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 transition"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => {
+              deleteTaskApiCall(_id);
+              toast.dismiss(t); // Dismiss the toast after confirmation
+            }}
+            //Color scheme for the delete button
+            className="text-sm px-3 py-1.5 rounded-md text-white bg-red-600 hover:bg-red-700 transition"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    ), {
+      duration: 100000, // Keep the toast open indefinitely until an action is taken
+      id: `delete-task-${_id}`, // Unique ID for managing the toast
+      position: 'top-center', // Position it centrally for a more 'dialog' feel
+    });
+  };
+
+  /**TEMPLATE */
   return (
     <div>
-      <div className="shadow-md  rounded-lg p-4 md:p-5 mx-auto mt-5 mb-5 max-w-[800px] bg-white sticky top-0 z-40">
+      <div className="shadow-md rounded-lg p-4 md:p-5 mx-auto mt-5 mb-5 max-w-[800px] bg-white sticky top-0 z-40">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className="text-lg font-bold text-gray-800 mr-2">
               My Tasks
             </span>
-
             <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded-full">
               {isLoading ? "..." : `${tasks.length} active`}
             </span>
           </div>
-
-          <div>
-            {!isLoading && tasks.length > 0 && (
-              <div className="task-actions">
-                <NewTaskButton onClick={() => setOpen(true)} />
-              </div>
-            )}
-          </div>
+          {!isLoading && tasks.length > 0 && (
+            <NewTaskButton onClick={() => setOpen(true)} />
+          )}
         </div>
       </div>
 
-      {/* CONDITIONAL RENDERING BLOCK */}
       <div className="p-4 space-y-4 max-w-[800px] mx-auto">
-
-        {/*ERROR STATE */}
+        {/* ERROR DIV */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md text-sm mb-4">
             {error}
           </div>
         )}
 
-        {/* 1. LOADING UI */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-12">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600 mb-4"></div>
@@ -92,23 +156,31 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen }) => {
               Fetching tasks...
             </p>
           </div>
-        ) : !error && tasks.length === 0 ? ( //prevent empty state if error occurs
-          <div>
-            <TaskLander />
-          </div>
+        ) : tasks.length === 0 && !error ? (
+          <TaskLander />
         ) : (
-          tasks?.map((task, index) => (
+          tasks.map((task, index) => (
             <TaskCard
               key={task._id}
               task={task}
-              onUpdate={() => {}}
-              onDelete={() => {}}
+              onUpdate={handleUpdateTask}
+              //Call the new handleDeleteTask function
+              onDelete={() => handleDeleteTask(task._id)}
+              onClick={() => openTaskDetail(task)}
               reveal={revealed}
               animateDelay={Math.min(index, 8) * STAGGER_MS}
             />
           ))
         )}
       </div>
+
+      {selectedTask && (
+        <TaskDetailModal
+          task={selectedTask}
+          open={true}
+          onClose={closeTaskDetail}
+        />
+      )}
     </div>
   );
 };

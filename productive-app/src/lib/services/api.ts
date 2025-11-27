@@ -27,6 +27,33 @@ taskApi.interceptors.request.use(
   }
 );
 
+/**RESPONSE INTERCEPTOR */
+taskApi.interceptors.response.use(
+  (response) => {
+    /**Return response if successful */
+    return response;
+  },
+  async (error) => {
+    /**Check if the error is a 401 Unauthorized */
+    if (error.response && error.response.status === 401) {
+      /**Initialize Supabase */
+      const supabase = createClient();
+
+      /**Sign out from Supabase (clears cookies/local storage) */
+      await supabase.auth.signOut();
+
+      /**Redirect to login page */
+      /**We use window.location because we can't use Next.js 'useRouter' inside a non-component file */
+      if (typeof window !== "undefined") {
+        window.location.href = "/login?error=Session expired";
+      }
+    }
+    /**Return the error so the calling component still knows something failed */
+    return Promise.reject(error);
+  }
+);
+
+/**EXPORTS */
 export default {
   get: (uri: string) => {
     return taskApi.get(uri);

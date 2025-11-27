@@ -17,6 +17,9 @@ const SignUpForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  /**success Modal variables */
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
   /**Styling */
   const imageContainerStyle = {
@@ -37,9 +40,19 @@ const SignUpForm: React.FC = () => {
     password: Yup.string()
       .required("Password is required")
       .min(6, "Password must be at least 6 characters"), // Matching Login logic (min 6)
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password")], "Passwords must match")
+      .required("Confirm Password is required"),
   });
 
   /**FUNCTIONS */
+
+  /**Handle closing the modal and redirecting */
+  const handleCloseModal = () => {
+    setShowSuccessModal(false);
+    router.push("/login");
+  };
+
   /**Function to handle signup */
   const handleSignup = async ({
     email,
@@ -64,9 +77,14 @@ const SignUpForm: React.FC = () => {
 
       /**Alert user on success */
       if (response.data) {
-        console.log(response.data);
-        /**Alert success */
-        alert(response.data.message);
+        // console.log(response.data);
+        // /**Alert success */
+        // alert(response.data.message);
+
+        // /** Redirect to login page automatically */
+        // router.push("/login");
+        setRegisteredEmail(email);
+        setShowSuccessModal(true);
         return response.data;
       }
     } catch (error) {
@@ -129,6 +147,7 @@ const SignUpForm: React.FC = () => {
               lastName: "",
               email: "",
               password: "",
+              confirmPassword: "",
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
@@ -162,11 +181,10 @@ const SignUpForm: React.FC = () => {
                     First Name
                   </label>
                   <div
-                    className={`rounded-md border ${
-                      errors.firstName && touched.firstName
+                    className={`rounded-md border ${errors.firstName && touched.firstName
                         ? "border-red-500"
                         : "border-gray-300"
-                    }`}
+                      }`}
                   >
                     <input
                       type="text"
@@ -195,11 +213,10 @@ const SignUpForm: React.FC = () => {
                     Last Name
                   </label>
                   <div
-                    className={`rounded-md border ${
-                      errors.lastName && touched.lastName
+                    className={`rounded-md border ${errors.lastName && touched.lastName
                         ? "border-red-500"
                         : "border-gray-300"
-                    }`}
+                      }`}
                   >
                     <input
                       type="text"
@@ -228,11 +245,10 @@ const SignUpForm: React.FC = () => {
                     Email
                   </label>
                   <div
-                    className={`rounded-md border ${
-                      errors.email && touched.email
+                    className={`rounded-md border ${errors.email && touched.email
                         ? "border-red-500"
                         : "border-gray-300"
-                    }`}
+                      }`}
                   >
                     <input
                       type="email"
@@ -259,11 +275,10 @@ const SignUpForm: React.FC = () => {
                     Password
                   </label>
                   <div
-                    className={`rounded-md border ${
-                      errors.password && touched.password
+                    className={`rounded-md border ${errors.password && touched.password
                         ? "border-red-500"
                         : "border-gray-300"
-                    }`}
+                      }`}
                   >
                     <input
                       type="password"
@@ -279,6 +294,39 @@ const SignUpForm: React.FC = () => {
                   {errors.password && touched.password && (
                     <p className="mt-1 text-xs text-red-500">
                       {errors.password}
+                    </p>
+                  )}
+                </div>
+
+                {/* CONFIRM PASSWORD */}
+                <div className="">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Confirm Password
+                  </label>
+                  <div
+                    className={`rounded-md border ${errors.confirmPassword && touched.confirmPassword
+                        ? "border-red-500"
+                        : "border-gray-300"
+                      }`}
+                  >
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      value={values.confirmPassword}
+                      onChange={handleChange("confirmPassword")}
+                      onBlur={handleBlur("confirmPassword")}
+                      className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+                      placeholder="Confirm Password"
+                    />
+                  </div>
+                  {/* Display error if passwords don't match */}
+                  {errors.confirmPassword && touched.confirmPassword && (
+                    <p className="mt-1 text-xs text-red-500">
+                      {errors.confirmPassword}
                     </p>
                   )}
                 </div>
@@ -313,6 +361,78 @@ const SignUpForm: React.FC = () => {
           </p>
         </div>
       </div>
+{/* SUCCESS MODAL */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md transition-opacity">
+          {/* Modal Card */}
+          <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4 relative text-center transform transition-all scale-100">
+            {/* Close Button (Top Right) */}
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Success Icon (Green Circle with Check) */}
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                 <svg
+                  width="80"
+                  height="80"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* Green Filled Circle */}
+                  <circle cx="12" cy="12" r="11" fill="#22c55e" />
+                  {/* White Checkmark */}
+                  <path
+                    d="M7 13L10 16L17 9"
+                    stroke="#ffffff"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Updated Title */}
+            <h2 className="text-2xl font-bold text-gray-800 mb-3">
+              User registered successfully
+            </h2>
+
+            {/* Updated Body Text */}
+            <p className="text-gray-600 text-sm leading-relaxed mb-6">
+              Please check email for verification
+            </p>
+
+            {/* Footer / Login Button */}
+            <div className="border-t border-gray-100 pt-4">
+                <button 
+                  onClick={handleCloseModal}
+                  className="text-sm text-green-600 font-medium hover:text-green-700 hover:underline"
+                >
+                Login
+                </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

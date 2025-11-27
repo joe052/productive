@@ -3,6 +3,7 @@ const app = express();
 const { mongoose } = require("./db/mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const requireAuth = require("./middleware/auth");
 
 /** Load the express middleware */
 app.use(bodyParser.json());
@@ -30,6 +31,9 @@ app.get("/", (req, res) => {
 
 /*AUTH ROUTES */
 app.use("/auth", require("./routes/auth.routes"));
+
+/**ADD AUTH MIDDLEWARE */
+app.use(requireAuth);
 
 /*TASKS ROUTES */
 app.use("/tasks", require("./routes/tasks.routes"));
