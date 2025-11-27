@@ -11,7 +11,7 @@ const tasklander: React.FC = () => {
 
   /**FUNCTIONS */
   /**Function to trigger the refresh */
-  const handleTaskCreated = () => {    
+  const handleTaskCreated = () => {
     window.location.reload();
   };
 
@@ -36,7 +36,7 @@ const tasklander: React.FC = () => {
         <p className="text-gray-600 text-center">Add your first task!</p>
         {/* BUTTON - Update onclick handler */}
         <button
-          className="w-full py-3 px-4 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+          className="w-full py-3 px-4 bg-[#2DC887] hover:bg-[#26A671] text-white font-medium rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
           onClick={() => setIsNewTaskOpen(true)}
         >
           {" "}
@@ -47,7 +47,11 @@ const tasklander: React.FC = () => {
       </div>
 
       {/*Add newtask modal component */}
-      <NewTask open={isNewTaskOpen} setOpen={setIsNewTaskOpen} onTaskCreated={handleTaskCreated} />
+      <NewTask
+        open={isNewTaskOpen}
+        setOpen={setIsNewTaskOpen}
+        onTaskCreated={handleTaskCreated}
+      />
     </div>
   );
 };
