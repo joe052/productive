@@ -16,7 +16,7 @@ interface NewTaskProps {
 }
 
 /** COMPONENT */
-const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
+const NewTask: React.FC<NewTaskProps> = ({ open, setOpen, onTaskCreated }) => {
   /**VARIABLES */
   if (!open) return null; // Don't render if modal is closed
 
@@ -42,7 +42,6 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
     try {
       /**Post user to API */
       const response = await taskApi.post("/tasks", {
-        userId: "69243de6dd7a8699e2e73971",
         title: values.title,
         description: values.description,
         scheduledAt: values.scheduledAt,
@@ -185,7 +184,7 @@ const NewTask: React.FC<NewTaskProps> = ({ open, setOpen,onTaskCreated }) => {
               {/* Priority */}
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Priority 
+                  Priority
                 </label>
                 <div className="flex items-center gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">

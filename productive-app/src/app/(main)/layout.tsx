@@ -15,7 +15,7 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log(user);
+  // console.log(user);
 
   /**FUNCTIONS */
 
