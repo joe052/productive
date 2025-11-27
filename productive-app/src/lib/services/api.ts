@@ -2,7 +2,7 @@ import axios from "axios";
 import { createClient } from "../supabase/client";
 
 const taskApi = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: process.env.NEXT_PUBLIC_API_URL!,
   headers: { "Content-Type": "application/json" },
 });
 
