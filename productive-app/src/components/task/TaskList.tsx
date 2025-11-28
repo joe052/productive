@@ -7,7 +7,7 @@ import TaskLander from "./TaskLander";
 import { Task } from "@/lib/interfaces";
 import { taskApi } from "@/lib/services/api";
 import TaskDetailModal from "../ui/TaskDetailModal";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
 
 const STAGGER_MS = 50;
 
@@ -32,9 +32,13 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen, refreshTrigger }) => {
     const fetchTasks = async () => {
       try {
         const response = await taskApi.get("/tasks");
-        if (response.data) {
+        if (Array.isArray(response.data)) {
           setTasks(response.data);
           setTimeout(() => setRevealed(true), 50);
+        } else {
+          /**Fallback: It's not an array, set empty to prevent crash */
+          console.error("Unexpected API response format", response.data);
+          setTasks([]);
         }
       } catch (err) {
         console.error("Failed to fetch tasks:", err);
@@ -69,15 +73,14 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen, refreshTrigger }) => {
       await taskApi.delete(`/tasks/${_id}`);
       setTasks((prev) => prev.filter((t) => t._id !== _id));
       setSelectedTask(null); // Close the detail modal if the selected task is deleted
-      
+
       //Success message using Sonner
       toast.success("Task deleted successfully!", {
         description: "Your task has been permanently removed.",
       });
-
     } catch (err) {
       setError("Failed to delete task. Please try again.");
-      
+
       // OPTIONAL: Error message using Sonner
       toast.error("Failed to delete task.", {
         description: "An error occurred while communicating with the API.",
@@ -88,38 +91,41 @@ const TaskList: React.FC<TaskListProps> = ({ setOpen, refreshTrigger }) => {
   // SONNER CONFIRMATION
   const handleDeleteTask = (_id: string) => {
     //custom Sonner toast for confirmation
-    toast.custom((t) => (
-      <div className="bg-white border border-gray-200 shadow-lg rounded-lg p-4 flex flex-col w-full max-w-sm">
-        <p className="text-sm font-semibold text-gray-800">
-          Are you sure you want to delete this task?
-        </p>
-        <p className="text-xs text-gray-500 mt-1">
-          This action cannot be undone.
-        </p>
-        <div className="flex justify-end space-x-2 mt-4">
-          <button
-            onClick={() => toast.dismiss(t)}
-            className="text-sm px-3 py-1.5 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 transition"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => {
-              deleteTaskApiCall(_id);
-              toast.dismiss(t); // Dismiss the toast after confirmation
-            }}
-            //Color scheme for the delete button
-            className="text-sm px-3 py-1.5 rounded-md text-white bg-red-600 hover:bg-red-700 transition"
-          >
-            Delete
-          </button>
+    toast.custom(
+      (t) => (
+        <div className="bg-white border border-gray-200 shadow-lg rounded-lg p-4 flex flex-col w-full max-w-sm">
+          <p className="text-sm font-semibold text-gray-800">
+            Are you sure you want to delete this task?
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            This action cannot be undone.
+          </p>
+          <div className="flex justify-end space-x-2 mt-4">
+            <button
+              onClick={() => toast.dismiss(t)}
+              className="text-sm px-3 py-1.5 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 transition"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                deleteTaskApiCall(_id);
+                toast.dismiss(t); // Dismiss the toast after confirmation
+              }}
+              //Color scheme for the delete button
+              className="text-sm px-3 py-1.5 rounded-md text-white bg-red-600 hover:bg-red-700 transition"
+            >
+              Delete
+            </button>
+          </div>
         </div>
-      </div>
-    ), {
-      duration: 100000, // Keep the toast open indefinitely until an action is taken
-      id: `delete-task-${_id}`, // Unique ID for managing the toast
-      position: 'top-center', // Position it centrally for a more 'dialog' feel
-    });
+      ),
+      {
+        duration: 100000, // Keep the toast open indefinitely until an action is taken
+        id: `delete-task-${_id}`, // Unique ID for managing the toast
+        position: "top-center", // Position it centrally for a more 'dialog' feel
+      }
+    );
   };
 
   /**TEMPLATE */
