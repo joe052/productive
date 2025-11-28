@@ -77,12 +77,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
         </div>
 
         <div className="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end">
-          <button
+          {/* <button
             onClick={onClose}
             className="px-4 py-2 text-gray-700 hover:bg-green-200 rounded-md"
           >
-            Close
-          </button>
+          close
+          </button> */}
         </div>
       </div>
     </div>
