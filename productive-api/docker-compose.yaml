@@ -1,0 +1,7 @@
+services:
+  productive-api:
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "4000:4000"

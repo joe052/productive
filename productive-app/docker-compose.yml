@@ -1,0 +1,7 @@
+services:
+  productive-app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "3000:3000"
