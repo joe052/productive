@@ -23,6 +23,7 @@ const UpdatePasswordForm: React.FC = () => {
     checkSession();
   }, []);
 
+  /** Image Styling */
   const imageContainerStyle = {
     borderTopRightRadius: "60px",
     borderBottomRightRadius: "60px",
