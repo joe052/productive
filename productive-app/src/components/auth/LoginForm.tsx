@@ -178,6 +178,16 @@ const LogInForm: React.FC = () => {
                     </p>
                   )}
                 </div>
+                {/* FORGOT PASSWORD */}
+                <div className="flex justify-end">
+                  <Link
+                    href="/forgot-password"
+                    className="text-sm text-green-500 hover:text-green-600 transition duration-150"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
+
                 {/* SUBMIT BUTTON */}
                 <div className="flex justify-center">
                   <button
