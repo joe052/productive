@@ -15,9 +15,11 @@ const UpdatePasswordForm: React.FC = () => {
   useEffect(() => {
     /** Check if session exists immediately on load */
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
-         setError("Invalid or expired reset link. Please try again.");
+        setError("Invalid or expired reset link. Please try again.");
       }
     };
     checkSession();
@@ -52,7 +54,7 @@ const UpdatePasswordForm: React.FC = () => {
       if (error) throw error;
 
       /** Redirect to login or dashboard after success */
-      router.push("/login"); 
+      router.push("/login");
       alert("Password updated successfully! Please log in.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -63,10 +65,17 @@ const UpdatePasswordForm: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <div className="hidden lg:block lg:w-1/2 relative" style={imageContainerStyle}>
+      <div
+        className="hidden lg:block lg:w-1/2 relative"
+        style={imageContainerStyle}
+      >
         <div
           className="h-full bg-cover bg-center shadow-2xl"
-          style={{ backgroundImage: "url('/images/auth.png')" }}
+          style={{
+            // backgroundImage: "url('/images/auth.png')",
+            backgroundImage:
+              "url('https://res.cloudinary.com/dekilw4yx/image/upload/v1764591087/pasted_file_pnofrk.png')",
+          }}
         ></div>
       </div>
 
@@ -82,11 +91,27 @@ const UpdatePasswordForm: React.FC = () => {
             validationSchema={validationSchema}
             onSubmit={(values) => handleUpdatePassword(values.password)}
           >
-            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isValid }) => (
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isValid,
+            }) => (
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">New Password</label>
-                  <div className={`rounded-md border ${errors.password && touched.password ? "border-red-500" : "border-gray-300"}`}>
+                  <label className="block text-sm font-medium text-gray-700">
+                    New Password
+                  </label>
+                  <div
+                    className={`rounded-md border ${
+                      errors.password && touched.password
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  >
                     <input
                       type="password"
                       name="password"
@@ -97,12 +122,24 @@ const UpdatePasswordForm: React.FC = () => {
                       placeholder="New Password"
                     />
                   </div>
-                  {errors.password && touched.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
+                  {errors.password && touched.password && (
+                    <p className="mt-1 text-xs text-red-500">
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
-                  <div className={`rounded-md border ${errors.confirmPassword && touched.confirmPassword ? "border-red-500" : "border-gray-300"}`}>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Confirm Password
+                  </label>
+                  <div
+                    className={`rounded-md border ${
+                      errors.confirmPassword && touched.confirmPassword
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  >
                     <input
                       type="password"
                       name="confirmPassword"
@@ -113,7 +150,11 @@ const UpdatePasswordForm: React.FC = () => {
                       placeholder="Confirm Password"
                     />
                   </div>
-                  {errors.confirmPassword && touched.confirmPassword && <p className="mt-1 text-xs text-red-500">{errors.confirmPassword}</p>}
+                  {errors.confirmPassword && touched.confirmPassword && (
+                    <p className="mt-1 text-xs text-red-500">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
                 </div>
 
                 <button
@@ -127,7 +168,9 @@ const UpdatePasswordForm: React.FC = () => {
             )}
           </Formik>
 
-          {error && <p className="mt-4 text-center text-sm text-red-500">{error}</p>}
+          {error && (
+            <p className="mt-4 text-center text-sm text-red-500">{error}</p>
+          )}
         </div>
       </div>
     </div>

@@ -63,7 +63,9 @@ const ForgotPasswordForm: React.FC = () => {
         <div
           className="h-full bg-cover bg-center shadow-2xl"
           style={{
-            backgroundImage: "url('/images/auth.png')",
+            // backgroundImage: "url('/images/auth.png')",
+            backgroundImage:
+              "url('https://res.cloudinary.com/dekilw4yx/image/upload/v1764591087/pasted_file_pnofrk.png')",
           }}
           aria-hidden="true"
         ></div>
