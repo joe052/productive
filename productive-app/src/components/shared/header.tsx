@@ -17,9 +17,7 @@ interface UserDropdownProps {
   handleLogout: () => void;
 }
 
-/** * SUB-COMPONENT: User Dropdown
- * Handles the "Pinterest-style" popup menu
- */
+/** * SUB-COMPONENT: User Dropdown */
 const UserDropdown = ({
   user,
   displayName,
@@ -44,9 +42,12 @@ const UserDropdown = ({
     };
   }, []);
 
-  // Safely get avatar url if it exists in metadata
+  /** EXTRACT AVATAR URL - Google usually provides 'avatar_url' or 'picture' */
+
   const avatarUrl =
-    user.user_metadata?.avatar_url || user.user_metadata?.picture;
+    user.user_metadata?.avatar_url ||
+    user.user_metadata?.picture ||
+    user.user_metadata?.avatar;
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -62,8 +63,11 @@ const UserDropdown = ({
               src={avatarUrl}
               alt="Profile"
               className="h-full w-full object-cover"
+              /** Google images sometimes break without this policy */
+              referrerPolicy="no-referrer"
             />
           ) : (
+            /** Fallback for Email/Password users */
             <span>{displayName.charAt(0).toUpperCase()}</span>
           )}
         </div>
@@ -94,13 +98,14 @@ const UserDropdown = ({
 
           {/* User Profile Card */}
           <div className="flex items-center gap-3 mb-6 p-2 rounded-xl hover:bg-gray-50 transition-colors cursor-default">
-            {/* Big Avatar */}
+            {/* Big Avatar inside Dropdown */}
             <div className="h-14 w-14 rounded-full bg-green-100 flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-200 text-xl font-bold text-green-700">
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
                   alt="Profile"
                   className="h-full w-full object-cover"
+                  referrerPolicy="no-referrer"
                 />
               ) : (
                 <span>{displayName.charAt(0).toUpperCase()}</span>
@@ -139,7 +144,6 @@ const UserDropdown = ({
           <div className="space-y-0.5">
             <button
               onClick={handleLogout}
-              // Added 'cursor-pointer' to the end of the class list
               className="w-full text-left px-2 py-2 text-md font-bold text-gray-800 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
             >
               Log out
@@ -156,7 +160,6 @@ const Header = ({ user: initialUser }: HeaderProps) => {
   /**VARIABLES */
   const router = useRouter();
   const [user, setUser] = useState<User | null>(initialUser);
-  // const [isMenuOpen, setIsMenuOpen] = useState(false); // Unused in this snippet, can keep if needed for mobile nav
 
   /**FUNCTIONS */
   /**Sync state if prop changes (e.g. on route change) */
@@ -169,15 +172,20 @@ const Header = ({ user: initialUser }: HeaderProps) => {
     const { error } = await supabase.auth.signOut();
 
     if (!error) {
-      setUser(null); // Optimistic UI update
-      router.refresh(); // Refreshes server components
-      router.push("/login"); // Redirect to login
+      setUser(null);
+      router.refresh();
+      router.push("/login");
     }
   };
 
   /**Helper to get initials or email prefix */
+  // Updated to check for Google specific keys (full_name/name) first
   const displayName =
-    user?.user_metadata?.first_name || user?.email?.split("@")[0] || "User";
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    user?.user_metadata?.first_name ||
+    user?.email?.split("@")[0] ||
+    "User";
 
   /**TEMPLATE */
   return (
@@ -186,7 +194,6 @@ const Header = ({ user: initialUser }: HeaderProps) => {
         className="flex items-center font-bold text-xl text-gray-800"
         href="/"
       >
-        {/* Ensure your image path is correct in public folder */}
         <img src="/calender.png" className="h-10 w-auto mr-2" alt="Logo" />
         Productive
       </Link>
