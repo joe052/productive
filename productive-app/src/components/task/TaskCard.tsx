@@ -38,7 +38,56 @@ const TaskCard: React.FC<TaskCardProps> = ({
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
   const [editPriority, setEditPriority] = useState(priority);
-  const [editDate, setEditDate] = useState(scheduledAt);
+  // Format date as DD/MM/YYYY for display in edit modal
+  const formatDateForEdit = (dateString: string) => {
+    try {
+      const d = new Date(dateString);
+      if (isNaN(d.getTime())) return "";
+      const dd = String(d.getDate()).padStart(2, "0");
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const yyyy = d.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    } catch {
+      return "";
+    }
+  };
+
+  // Parse DD/MM/YYYY back to ISO date string for storage
+  const parseEditDate = (dateString: string) => {
+    try {
+      const parts = dateString.split("/");
+      if (parts.length !== 3) return "";
+      const dd = parseInt(parts[0], 10);
+      const mm = parseInt(parts[1], 10);
+      const yyyy = parseInt(parts[2], 10);
+      if (isNaN(dd) || isNaN(mm) || isNaN(yyyy)) return "";
+      const d = new Date(yyyy, mm - 1, dd);
+      if (isNaN(d.getTime())) return "";
+      // Return ISO date string for backend
+      const isoDD = String(d.getDate()).padStart(2, "0");
+      const isoMM = String(d.getMonth() + 1).padStart(2, "0");
+      const isoYYYY = d.getFullYear();
+      return `${isoYYYY}-${isoMM}-${isoDD}`;
+    } catch {
+      return "";
+    }
+  };
+
+  // Format for display: numeric DD/MM/YY (e.g., 02/12/25)
+  const formatDateDisplay = (dateString: string) => {
+    try {
+      const d = new Date(dateString);
+      if (isNaN(d.getTime())) return "";
+      const dd = String(d.getDate()).padStart(2, "0");
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const yy = String(d.getFullYear() % 100).padStart(2, "0");
+      return `${dd}/${mm}/${yy}`;
+    } catch {
+      return "";
+    }
+  };
+
+  const [editDate, setEditDate] = useState(() => formatDateForEdit(scheduledAt));
   const [isCompleted, setIsCompleted] = useState(task.status === "complete");
   const closeEdit = () => setIsEditing(false);
   const portalTarget = typeof document !== "undefined" ? document.body : null;
@@ -58,17 +107,18 @@ const TaskCard: React.FC<TaskCardProps> = ({
     setEditTitle(title);
     setEditDescription(description);
     setEditPriority(priority);
-    setEditDate(scheduledAt);
+    setEditDate(formatDateForEdit(scheduledAt));
     setIsEditing(true);
   };
 
   /**Function to handle update */
   const handleSave = () => {
+    const isoDate = parseEditDate(editDate);
     onUpdate(_id, {
       title: editTitle,
       description: editDescription,
       priority: editPriority,
-      scheduledAt: editDate,
+      scheduledAt: isoDate || editDate, // fallback to editDate if parse fails
       status: isCompleted ? "complete" : "pending",
     });
     closeEdit();
@@ -96,7 +146,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
     setEditTitle(title);
     setEditDescription(description);
     setEditPriority(priority);
-    setEditDate(scheduledAt);
+    setEditDate(formatDateForEdit(scheduledAt));
     setIsCompleted(task.status === "complete");
   }, [title, description, priority, scheduledAt, status]);
 
@@ -134,7 +184,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
               <div className="flex items-center gap-6 mt-4 text-sm text-gray-500 flex-wrap">
                 <span className="flex items-center gap-1">
                   <Calendar className="w-4 h-4 text-gray-400" />
-                  {new Date(scheduledAt).toLocaleDateString()}
+                    {formatDateDisplay(scheduledAt)}
                 </span>
 
                 <span className={`flex items-center gap-1`}>
@@ -229,13 +279,13 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 />
 
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Scheduled Date
+                  Scheduled Date (DD/MM/YYYY)
                 </label>
                 <input
-                  type="date"
+                  type="text"
+                  placeholder="DD/MM/YYYY"
                   className="w-full p-2 border border-gray-300 rounded mb-4"
                   value={editDate}
-                  min={new Date().toISOString().split("T")[0]}
                   onChange={(e) => setEditDate(e.target.value)}
                 />
 

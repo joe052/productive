@@ -19,12 +19,17 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   if (!open) return null;
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    try {
+      const d = new Date(dateString);
+      if (isNaN(d.getTime())) return "";
+      // Display as numeric DD/MM/YY (e.g., 02/12/25)
+      const dd = String(d.getDate()).padStart(2, "0");
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const yy = String(d.getFullYear() % 100).padStart(2, "0");
+      return `${dd}/${mm}/${yy}`;
+    } catch {
+      return "";
+    }
   };
 
   const priorityColorClass =
