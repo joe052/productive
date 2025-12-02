@@ -74,7 +74,9 @@ const LogInForm: React.FC = () => {
         <div
           className="h-full bg-cover bg-center shadow-2xl"
           style={{
-            backgroundImage: "url('/images/auth.png')",
+            // backgroundImage: "url('/images/auth.png')",
+            backgroundImage:
+              "url('https://res.cloudinary.com/dekilw4yx/image/upload/v1764591087/pasted_file_pnofrk.png')",
           }}
           aria-hidden="true"
         ></div>
@@ -178,6 +180,16 @@ const LogInForm: React.FC = () => {
                     </p>
                   )}
                 </div>
+                {/* FORGOT PASSWORD */}
+                <div className="flex justify-end">
+                  <Link
+                    href="/forgot-password"
+                    className="text-sm text-green-500 hover:text-green-600 transition duration-150"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
+
                 {/* SUBMIT BUTTON */}
                 <div className="flex justify-center">
                   <button
