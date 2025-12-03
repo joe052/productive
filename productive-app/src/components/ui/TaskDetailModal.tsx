@@ -19,12 +19,17 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   if (!open) return null;
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    try {
+      const d = new Date(dateString);
+      if (isNaN(d.getTime())) return "";
+      // Display as numeric DD/MM/YY (e.g., 02/12/25)
+      const dd = String(d.getDate()).padStart(2, "0");
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const yy = String(d.getFullYear() % 100).padStart(2, "0");
+      return `${dd}/${mm}/${yy}`;
+    } catch {
+      return "";
+    }
   };
 
   const priorityColorClass =
@@ -77,12 +82,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
         </div>
 
         <div className="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end">
-          <button
+          {/* <button
             onClick={onClose}
             className="px-4 py-2 text-gray-700 hover:bg-green-200 rounded-md"
           >
-            Close
-          </button>
+          close
+          </button> */}
         </div>
       </div>
     </div>
