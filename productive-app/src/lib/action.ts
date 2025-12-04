@@ -8,7 +8,7 @@ const signInWith = (provider: Provider) => async () => {
     const supabase = await createClient()
 
     // Ensure SITE_URL is defined, otherwise fallback to localhost or handle error
-    const auth_callback_url = `${process.env.SITE_URL}/auth/callback`
+    const auth_callback_url = `${process.env.SITE_URL}/callback`
 
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
