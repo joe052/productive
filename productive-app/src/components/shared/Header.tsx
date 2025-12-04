@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,6 @@ import HeaderDropdown from "./HeaderDropdown";
 interface HeaderProps {
   user: User | null;
 }
-
 
 /**COMPONENT */
 const Header: React.FC<HeaderProps> = ({ user: initialUser }) => {
@@ -48,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ user: initialUser }) => {
 
   /**TEMPLATE */
   return (
-    <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white border-b border-gray-200 relative z-[100]">
+    <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white border-b border-gray-200 relative z-100">
       <Link
         className="flex items-center font-bold text-xl text-gray-800"
         href="/"
