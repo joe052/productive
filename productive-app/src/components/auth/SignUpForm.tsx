@@ -127,7 +127,9 @@ const SignUpForm: React.FC = () => {
         <div
           className="h-full bg-cover bg-center shadow-2xl"
           style={{
-            backgroundImage: "url('/images/auth.png')",
+            // backgroundImage: "url('/images/auth.png')",
+            backgroundImage:
+              "url('https://res.cloudinary.com/dekilw4yx/image/upload/v1764591087/pasted_file_pnofrk.png')",
           }}
           aria-hidden="true"
         ></div>
@@ -181,10 +183,11 @@ const SignUpForm: React.FC = () => {
                     First Name
                   </label>
                   <div
-                    className={`rounded-md border ${errors.firstName && touched.firstName
+                    className={`rounded-md border ${
+                      errors.firstName && touched.firstName
                         ? "border-red-500"
                         : "border-gray-300"
-                      }`}
+                    }`}
                   >
                     <input
                       type="text"
@@ -213,10 +216,11 @@ const SignUpForm: React.FC = () => {
                     Last Name
                   </label>
                   <div
-                    className={`rounded-md border ${errors.lastName && touched.lastName
+                    className={`rounded-md border ${
+                      errors.lastName && touched.lastName
                         ? "border-red-500"
                         : "border-gray-300"
-                      }`}
+                    }`}
                   >
                     <input
                       type="text"
@@ -245,10 +249,11 @@ const SignUpForm: React.FC = () => {
                     Email
                   </label>
                   <div
-                    className={`rounded-md border ${errors.email && touched.email
+                    className={`rounded-md border ${
+                      errors.email && touched.email
                         ? "border-red-500"
                         : "border-gray-300"
-                      }`}
+                    }`}
                   >
                     <input
                       type="email"
@@ -275,10 +280,11 @@ const SignUpForm: React.FC = () => {
                     Password
                   </label>
                   <div
-                    className={`rounded-md border ${errors.password && touched.password
+                    className={`rounded-md border ${
+                      errors.password && touched.password
                         ? "border-red-500"
                         : "border-gray-300"
-                      }`}
+                    }`}
                   >
                     <input
                       type="password"
@@ -307,10 +313,11 @@ const SignUpForm: React.FC = () => {
                     Confirm Password
                   </label>
                   <div
-                    className={`rounded-md border ${errors.confirmPassword && touched.confirmPassword
+                    className={`rounded-md border ${
+                      errors.confirmPassword && touched.confirmPassword
                         ? "border-red-500"
                         : "border-gray-300"
-                      }`}
+                    }`}
                   >
                     <input
                       type="password"
@@ -336,7 +343,8 @@ const SignUpForm: React.FC = () => {
                   <button
                     type="submit"
                     disabled={!isValid || loading || isSubmitting}
-                    className={`w-full py-2 px-4 border border-transparent rounded-md shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 disabled:bg-green-300 disabled:cursor-not-allowed `}
+                    // Added 'cursor-pointer' below
+                    className={`w-full py-2 px-4 border border-transparent rounded-md shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 cursor-pointer disabled:bg-green-300 disabled:cursor-not-allowed`}
                   >
                     {isSubmitting ? "Creating Account..." : "Create Account"}
                   </button>
@@ -361,7 +369,7 @@ const SignUpForm: React.FC = () => {
           </p>
         </div>
       </div>
-{/* SUCCESS MODAL */}
+      {/* SUCCESS MODAL */}
       {showSuccessModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md transition-opacity">
           {/* Modal Card */}
@@ -390,7 +398,7 @@ const SignUpForm: React.FC = () => {
             {/* Success Icon (Green Circle with Check) */}
             <div className="flex justify-center mb-6">
               <div className="relative">
-                 <svg
+                <svg
                   width="80"
                   height="80"
                   viewBox="0 0 24 24"
@@ -423,12 +431,12 @@ const SignUpForm: React.FC = () => {
 
             {/* Footer / Login Button */}
             <div className="border-t border-gray-100 pt-4">
-                <button 
-                  onClick={handleCloseModal}
-                  className="text-sm text-green-600 font-medium hover:text-green-700 hover:underline"
-                >
+              <button
+                onClick={handleCloseModal}
+                className="text-sm text-green-600 font-medium hover:text-green-700 hover:underline"
+              >
                 Login
-                </button>
+              </button>
             </div>
           </div>
         </div>

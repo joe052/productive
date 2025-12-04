@@ -1,34 +1,25 @@
-"use client";
-
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useRef } from "react";
 import { User } from "@supabase/supabase-js";
-import { useState, useEffect, useRef } from "react";
 
 /**INTERFACES & TYPES */
-interface HeaderProps {
-  user: User | null;
-}
-
 interface UserDropdownProps {
   user: User;
   displayName: string;
   handleLogout: () => void;
 }
 
-/** * SUB-COMPONENT: User Dropdown
- * Handles the "Pinterest-style" popup menu
- */
-const UserDropdown = ({
+/**COMPONENT */
+const HeaderDropdown: React.FC<UserDropdownProps> = ({
   user,
   displayName,
   handleLogout,
-}: UserDropdownProps) => {
+}) => {
+  /**VARIABLES */
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown if clicked outside
+  /**FUNCTIONS */
+  /**Close dropdown if clicked outside */
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -44,10 +35,13 @@ const UserDropdown = ({
     };
   }, []);
 
-  // Safely get avatar url if it exists in metadata
+  /** EXTRACT AVATAR URL - Google usually provides 'avatar_url' or 'picture' */
   const avatarUrl =
-    user.user_metadata?.avatar_url || user.user_metadata?.picture;
+    user.user_metadata?.avatar_url ||
+    user.user_metadata?.picture ||
+    user.user_metadata?.avatar;
 
+  /**TEMPLATE */
   return (
     <div className="relative" ref={dropdownRef}>
       {/* ================= TRIGGER BUTTON ================= */}
@@ -62,8 +56,11 @@ const UserDropdown = ({
               src={avatarUrl}
               alt="Profile"
               className="h-full w-full object-cover"
+              /** Google images sometimes break without this policy */
+              referrerPolicy="no-referrer"
             />
           ) : (
+            /** Fallback for Email/Password users */
             <span>{displayName.charAt(0).toUpperCase()}</span>
           )}
         </div>
@@ -88,19 +85,20 @@ const UserDropdown = ({
 
       {/* ================= DROPDOWN MENU ================= */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 p-5 z-[105] animate-in fade-in zoom-in-95 duration-100">
+        <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 p-5 z-105 animate-in fade-in zoom-in-95 duration-100">
           {/* Section: Currently In */}
           <p className="text-xs font-medium text-gray-500 mb-3">Currently in</p>
 
           {/* User Profile Card */}
           <div className="flex items-center gap-3 mb-6 p-2 rounded-xl hover:bg-gray-50 transition-colors cursor-default">
-            {/* Big Avatar */}
-            <div className="h-14 w-14 rounded-full bg-green-100 flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-200 text-xl font-bold text-green-700">
+            {/* Big Avatar inside Dropdown */}
+            <div className="h-14 w-14 rounded-full bg-green-100 shrink-0 flex items-center justify-center overflow-hidden border border-gray-200 text-xl font-bold text-green-700">
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
                   alt="Profile"
                   className="h-full w-full object-cover"
+                  referrerPolicy="no-referrer"
                 />
               ) : (
                 <span>{displayName.charAt(0).toUpperCase()}</span>
@@ -139,8 +137,7 @@ const UserDropdown = ({
           <div className="space-y-0.5">
             <button
               onClick={handleLogout}
-              // Added 'cursor-pointer' to the end of the class list
-              className="w-full text-left px-2 py-2 text-md font-bold text-gray-800 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
+              className="w-full text-left px-2 py-2 text-md font-bold text-gray-800 hover:bg-gray-50 hover:text-red-500 rounded-lg transition-colors cursor-pointer"
             >
               Log out
             </button>
@@ -151,75 +148,4 @@ const UserDropdown = ({
   );
 };
 
-/**MAIN COMPONENT */
-const Header = ({ user: initialUser }: HeaderProps) => {
-  /**VARIABLES */
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(initialUser);
-  // const [isMenuOpen, setIsMenuOpen] = useState(false); // Unused in this snippet, can keep if needed for mobile nav
-
-  /**FUNCTIONS */
-  /**Sync state if prop changes (e.g. on route change) */
-  useEffect(() => {
-    setUser(initialUser);
-  }, [initialUser]);
-
-  const handleLogout = async () => {
-    const supabase = createClient();
-    const { error } = await supabase.auth.signOut();
-
-    if (!error) {
-      setUser(null); // Optimistic UI update
-      router.refresh(); // Refreshes server components
-      router.push("/login"); // Redirect to login
-    }
-  };
-
-  /**Helper to get initials or email prefix */
-  const displayName =
-    user?.user_metadata?.first_name || user?.email?.split("@")[0] || "User";
-
-  /**TEMPLATE */
-  return (
-    <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white border-b border-gray-200 relative z-[100]">
-      <Link
-        className="flex items-center font-bold text-xl text-gray-800"
-        href="/"
-      >
-        {/* Ensure your image path is correct in public folder */}
-        <img src="/calender.png" className="h-10 w-auto mr-2" alt="Logo" />
-        Productive
-      </Link>
-
-      <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
-        {!user ? (
-          /* ================= GUEST VIEW ================= */
-          <>
-            <Link
-              className="text-sm font-medium text-emerald-500 hover:text-emerald-600"
-              href="/login"
-            >
-              <button className="py-2 px-4 border border-green-500 rounded-full text-sm font-medium text-green-500 hover:bg-green-50 transition duration-150">
-                Login
-              </button>
-            </Link>
-            <Link className="text-sm font-medium" href="/signup">
-              <button className="py-2 px-4 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 transition duration-150">
-                Signup
-              </button>
-            </Link>
-          </>
-        ) : (
-          /* ================= LOGGED IN VIEW ================= */
-          <UserDropdown
-            user={user}
-            displayName={displayName}
-            handleLogout={handleLogout}
-          />
-        )}
-      </nav>
-    </header>
-  );
-};
-
-export default Header;
+export default HeaderDropdown;
