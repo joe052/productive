@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { taskApi } from "@/lib/services/api";
 import { SignUpInt } from "@/lib/interfaces";
 import axios from "axios";
-import { signInWithGoogle } from "@/lib/action";
 
 /**COMPONENT */
 const SignUpForm: React.FC = () => {
@@ -115,16 +114,6 @@ const SignUpForm: React.FC = () => {
       console.error(error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  /**Handle Google Sign In */
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {
-      console.error("Google Sign-In Error:", error);
-      setError("Failed to sign in with Google. Please try again.");
     }
   };
 
@@ -358,30 +347,6 @@ const SignUpForm: React.FC = () => {
                     className={`w-full py-2 px-4 border border-transparent rounded-md shadow-md text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 cursor-pointer disabled:bg-green-300 disabled:cursor-not-allowed`}
                   >
                     {isSubmitting ? "Creating Account..." : "Create Account"}
-                  </button>
-                </div>
-
-                {/* OR */}
-                <div className="flex items-center justify-center mt-4 mb-4">
-                  <span className="border-b w-1/5 lg:w-1/4"></span>
-                  <span className="text-xs text-gray-500 mx-2">OR</span>
-                  <span className="border-b w-1/5 lg:w-1/4"></span>
-                </div>
-
-                {/* GOOGLE SIGN IN BUTTON */}
-                <div className="flex justify-center">
-                  <button
-                    type="button"
-                    onClick={handleGoogleSignIn}
-                    className="w-full flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-green-100 hover:border-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 cursor-pointer"
-                  >
-                    {/* Insert Google Icon SVG or Image here */}
-                    <img
-                      className="w-4 h-4 mr-3"
-                      src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-                      alt="Google sign-in"
-                    />
-                    Sign up with Google
                   </button>
                 </div>
               </form>
