@@ -1,4 +1,4 @@
-import Header from "@/components/shared/header";
+import Header from "@/components/shared/Header";
 import { createClient } from "@/lib/supabase/server";
 import { ReactNode } from "react";
 
